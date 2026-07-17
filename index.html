@@ -31,6 +31,7 @@
             display: flex;
             gap: 6px;
             flex-shrink: 0;
+            align-items: center;
         }
         .btn-header-action {
             font-size: 12px;
@@ -115,15 +116,17 @@
     </div>
 
 
-    <!-- ================= 2. TRAINER DASHBOARD (FIXED ALIGNMENT) ================= -->
+    <!-- ================= 2. TRAINER DASHBOARD (UPDATED) ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
-                <h6 class="fw-bold mb-0 text-dark">👋 Trainer Main</h6>
+                <!-- UPDATED: Dynamic Welcome label showing Username -->
+                <h6 class="fw-bold mb-0 text-dark" id="trainerWelcome">👋 Welcome, Trainer</h6>
                 <small class="text-muted" style="font-size: 11px;">Gym Management</small>
             </div>
             <div class="header-btn-group">
-                <button class="btn btn-header-action btn-outline-secondary" onclick="openPasswordChange('trainerDashboard')">⚙️ Pwd</button>
+                <!-- UPDATED: Full 'Password' text instead of 'Pwd' -->
+                <button class="btn btn-header-action btn-outline-secondary" onclick="openPasswordChange('trainerDashboard')">⚙️ Password</button>
                 <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -269,7 +272,7 @@
     </div>
 
 
-    <!-- ================= 5. NEW CREATIVE VIEW & SEARCH LOGS ================= -->
+    <!-- ================= 5. CREATIVE VIEW & SEARCH LOGS ================= -->
     <div id="viewLogsScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
             <h5 class="fw-bold mb-0 text-dark">🔍 Search Client Logs</h5>
@@ -340,15 +343,17 @@
     </div>
 
 
-    <!-- ================= 6. TRAINEE DASHBOARD (FIXED ALIGNMENT) ================= -->
+    <!-- ================= 6. TRAINEE DASHBOARD ================= -->
     <div id="traineeDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
+                <!-- UPDATED: Dynamic Client Welcome -->
                 <h6 class="fw-bold mb-0 text-dark" id="clientWelcome">👋 Welcome</h6>
                 <small class="text-muted" style="font-size: 11px;">Trainee Log</small>
             </div>
             <div class="header-btn-group">
-                <button class="btn btn-header-action btn-outline-secondary" onclick="openPasswordChange('traineeDashboard')">⚙️ Pwd</button>
+                <!-- UPDATED: Full 'Password' text instead of 'Pwd' -->
+                <button class="btn btn-header-action btn-outline-secondary" onclick="openPasswordChange('traineeDashboard')">⚙️ Password</button>
                 <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -417,15 +422,18 @@ function openPasswordChange(fromScreenId) {
     showScreen('changePasswordScreen');
 }
 
+// UPDATED: Logic to capture username and show in welcome message dynamically
 function handleLogin(event) {
     event.preventDefault();
-    const user = document.getElementById('username').value.trim().toLowerCase();
+    const rawUsername = document.getElementById('username').value;
+    const user = rawUsername.trim().toLowerCase();
     
-    if (user === 'trainer' || user === 'pt') {
+    if (user === 'trainer' || user === 'pt' || user === 'prasaath') {
+        // Show actual username typed (e.g., prasaath) in the header
+        document.getElementById('trainerWelcome').innerText = "👋 Welcome, " + rawUsername;
         showScreen('trainerDashboard');
     } else {
-        const displayUsername = document.getElementById('username').value;
-        document.getElementById('clientWelcome').innerText = "👋 Welcome, " + displayUsername;
+        document.getElementById('clientWelcome').innerText = "👋 Welcome, " + rawUsername;
         showScreen('traineeDashboard');
     }
 }
@@ -473,5 +481,5 @@ function removeRow(button) {
 document.getElementById('logDate').valueAsDate = new Date();
 </script>
 
-</head>
+</body>
 </html>
