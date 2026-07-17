@@ -26,6 +26,9 @@
         .btn-edit-custom:hover { background-color: #ca8a04; color: white; }
         .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
         .btn-del-custom:hover { background-color: #dc2626; color: white; }
+        
+        /* Copyright styling */
+        .copyright-text { font-size: 11px; color: #94a3b8; margin-top: 30px; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
@@ -50,10 +53,8 @@
                 <button type="submit" class="btn btn-primary w-100 fw-bold py-2">LOGIN</button>
             </form>
             
-            <div class="mt-4 text-muted text-start bg-light p-3 rounded" style="font-size: 12px; border-left: 4px solid #0d6efd;">
-                <strong>💡 Demo Login Credentials:</strong><br>
-                • For PT View: Type <code class="text-danger fw-bold">trainer</code> or <code class="text-danger fw-bold">pt</code><br>
-                • For Client View: Type <code class="text-success fw-bold">johndoe</code> or any name
+            <div class="copyright-text">
+                &copy; 2026 <span class="fw-bold text-secondary">3i design empire.com</span>. All Rights Reserved.
             </div>
         </div>
     </div>
@@ -273,15 +274,15 @@
             <form onsubmit="alert('Password Changed Successfully!'); document.getElementById('pwdBackBtn').click(); return false;">
                 <div class="mb-3">
                     <label class="form-label small fw-semibold text-secondary">CURRENT PASSWORD</label>
-                    <input type="password" class="form-control" placeholder="Enter current password" required>
+                    <input type="password" class="password-field form-control" placeholder="Enter current password" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label small fw-semibold text-secondary">NEW PASSWORD</label>
-                    <input type="password" class="form-control" placeholder="Enter new secret password" required>
+                    <input type="password" class="password-field form-control" placeholder="Enter new secret password" required>
                 </div>
                 <div class="mb-4">
                     <label class="form-label small fw-semibold text-secondary">CONFIRM NEW PASSWORD</label>
-                    <input type="password" class="form-control" placeholder="Re-type new password" required>
+                    <input type="password" class="password-field form-control" placeholder="Re-type new password" required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 fw-bold py-2">UPDATE PASSWORD</button>
             </form>
@@ -300,7 +301,6 @@ function showScreen(screenId) {
     window.scrollTo(0, 0);
 }
 
-// NEW: Function to navigate to Change Password screen smoothly
 function openPasswordChange(fromScreenId) {
     previousScreenBeforePassword = fromScreenId;
     document.getElementById('pwdBackBtn').setAttribute('onclick', `showScreen('${fromScreenId}')`);
