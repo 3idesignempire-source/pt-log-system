@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Log System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; font-family: -apple-system, sans-serif; }
+        .card-custom { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: none; }
+        .app-screen { display: none; } 
+        .active-screen { display: block; } 
+        
+        .section-header { 
+            background: linear-gradient(135deg, #2563eb, #1d4ed8); 
+            color: white; 
+            padding: 8px 12px; 
+            border-radius: 8px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .log-row { margin-bottom: 8px; }
+        
+        .btn-edit-custom { background-color: #eab308; color: white; border: none; font-weight: 500; }
+        .btn-edit-custom:hover { background-color: #ca8a04; color: white; }
+        .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
+        .btn-del-custom:hover { background-color: #dc2626; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container my-4" style="max-width: 600px;">
+
+    <div id="loginScreen" class="app-screen active-screen">
+        <div class="card card-custom p-4 bg-white text-center">
+            <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
+            <p class="text-muted small mb-4">Track workouts, achieve goals.</p>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-3 text-start">
+                    <label class="form-label small fw-semibold text-secondary">USERNAME</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username" required>
+                </div>
+                <div class="mb-4 text-start">
+                    <label class="form-label small fw-semibold text-secondary">PASSWORD</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">LOGIN</button>
+            </form>
+            
+            <div class="mt-4 text-muted text-start bg-light p-3 rounded" style="font-size: 12px; border-left: 4px solid #0d6efd;">
+                <strong>💡 Demo Login Credentials:</strong><br>
+                • For PT View: Type <code class="text-danger fw-bold">trainer</code> or <code class="text-danger fw-bold">pt</code><br>
+                • For Client View: Type <code class="text-success fw-bold">johndoe</code> or any name
+            </div>
+        </div>
+    </div>
+
+
+    <div id="trainerDashboard" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0 text-dark">👋 PT Trainer Dashboard</h5>
+            <div>
+                <button class="btn btn-sm btn-outline-secondary fw-semibold me-1" onclick="openPasswordChange('trainerDashboard')">⚙️ Password</button>
+                <button class="btn btn-sm btn-outline-danger fw-semibold" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        
+        <div class="row g-2 mb-4">
+            <div class="col-6">
+                <button class="btn btn-primary w-100 py-3 fw-semibold card-custom text-white" style="background-color: #2563eb;" onclick="showScreen('manageTraineesScreen')">👥 Register / Manage Trainee</button>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-success w-100 py-3 fw-semibold card-custom" onclick="showScreen('addLogScreen')">📝 Add Workout Log</button>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-dark w-100 py-3 fw-semibold card-custom" style="background-color: #0f172a;" onclick="showScreen('viewLogsScreen')">🔍 View & Search Logs</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="manageTraineesScreen" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">👥 Manage Trainees</h5>
+            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
+        </div>
+
+        <div class="card card-custom p-3 bg-white mb-3">
+            <h6 class="fw-bold text-primary mb-3">Register New Trainee</h6>
+            <form onsubmit="alert('Trainee Saved Successfully!'); return false;">
+                <div class="mb-2"><input type="text" class="form-control form-control-sm" placeholder="Full Name" required></div>
+                <div class="mb-2"><input type="text" class="form-control form-control-sm" placeholder="Username (For Client Login)" required></div>
+                <div class="mb-2"><input type="password" class="form-control form-control-sm" placeholder="Password" required></div>
+                <div class="mb-3"><input type="tel" class="form-control form-control-sm" placeholder="Phone Number"></div>
+                <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">SAVE TRAINEE</button>
+            </form>
+        </div>
+
+        <div class="card card-custom p-3 bg-white">
+            <h6 class="fw-bold mb-2 text-secondary">Active Trainees List</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 14px;">
+                    <thead><tr><th>Name</th><th>Username</th><th class="text-end">Actions</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>John Doe</td>
+                            <td>johndoe</td>
+                            <td class="text-end">
+                                <button class="btn btn-xs btn-edit-custom py-0 px-2 rounded me-1" style="font-size: 12px;" onclick="alert('Edit Clicked')">Edit</button>
+                                <button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size: 12px;" onclick="alert('Delete Clicked')">Del</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>janesmith</td>
+                            <td class="text-end">
+                                <button class="btn btn-xs btn-edit-custom py-0 px-2 rounded me-1" style="font-size: 12px;" onclick="alert('Edit Clicked')">Edit</button>
+                                <button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size: 12px;" onclick="alert('Delete Clicked')">Del</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="addLogScreen" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">📝 Add Workout Log</h5>
+            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
+        </div>
+
+        <div class="card card-custom p-3 bg-white">
+            <form onsubmit="alert('Log saved!'); showScreen('trainerDashboard'); return false;">
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary small">SELECT ACTIVE TRAINEE</label>
+                    <select class="form-select" id="logTraineeSelect" required>
+                        <option value="">-- Choose Trainee --</option>
+                        <option value="John Doe">John Doe</option>
+                        <option value="Jane Smith">Jane Smith</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary small">DATE</label>
+                    <input type="date" id="logDate" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary small">WORKOUT PROGRAM FOR THE DAY</label>
+                    <textarea class="form-control" rows="2" placeholder="e.g., Push Day / Upper Body Focus"></textarea>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center section-header mb-2">
+                    <span>WARM UP</span>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:12px;" onclick="addDynamicRow('warmupSection', 'warmup')">+ Add</button>
+                </div>
+                <div id="warmupSection">
+                    <div class="row g-1 log-row align-items-center">
+                        <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
+                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Time"></div>
+                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Int."></div>
+                        <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
+                        <div class="col-1 text-end"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center section-header mb-2 mt-3">
+                    <span>STRENGTH TRAINING</span>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:12px;" onclick="addDynamicRow('strengthSection', 'strength')">+ Add</button>
+                </div>
+                <div id="strengthSection">
+                    <div class="row g-1 log-row align-items-center">
+                        <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
+                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Weight"></div>
+                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Reps"></div>
+                        <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
+                        <div class="col-1 text-end"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center section-header mb-2 mt-3">
+                    <span>CARDIO TRAINING</span>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:12px;" onclick="addDynamicRow('cardioSection', 'cardio')">+ Add</button>
+                </div>
+                <div id="cardioSection">
+                    <div class="row g-1 log-row align-items-center">
+                        <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
+                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Time"></div>
+                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Int."></div>
+                        <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
+                        <div class="col-1 text-end"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 fw-bold mt-4 py-2">SUBMIT WORKOUT LOG</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="viewLogsScreen" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">🔍 View & Search Logs</h5>
+            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
+        </div>
+
+        <div class="card card-custom p-3 bg-white mb-3">
+            <div class="row g-2">
+                <div class="col-6">
+                    <select class="form-select form-select-sm">
+                        <option value="">All Trainees</option>
+                        <option>John Doe</option>
+                        <option>Jane Smith</option>
+                    </select>
+                </div>
+                <div class="col-6"><input type="date" class="form-control form-control-sm"></div>
+                <div class="col-12"><button class="btn btn-sm btn-primary w-100 fw-bold" onclick="alert('Filtering Logs Summary...')">SEARCH LOGS</button></div>
+            </div>
+        </div>
+
+        <div class="card card-custom p-3 bg-white mb-2">
+            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                <span class="fw-bold text-dark">John Doe</span>
+                <span class="text-secondary small fw-medium">2026-07-10</span>
+            </div>
+            <p class="mb-1 small"><strong>Program:</strong> Chest Focus</p>
+            <p class="mb-0 small text-muted"><strong>Strength:</strong> Bench Press - 40kg x 12 Reps</p>
+        </div>
+    </div>
+
+
+    <div id="traineeDashboard" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h5 class="fw-bold mb-0" id="clientWelcome">👋 Welcome, Trainee</h5>
+                <p class="text-muted small mb-0">Your Personal Workout History</p>
+            </div>
+            <div>
+                <button class="btn btn-sm btn-outline-secondary fw-semibold me-1" onclick="openPasswordChange('traineeDashboard')">⚙️ Password</button>
+                <button class="btn btn-sm btn-outline-danger fw-semibold" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="card card-custom p-3 bg-white mb-2">
+            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                <span class="fw-bold text-success">Today's Workout</span>
+                <span class="text-secondary small fw-medium">2026-07-10</span>
+            </div>
+            <p class="mb-2 small"><strong>Program Assigned by PT:</strong> Leg Day Intensity</p>
+            <div class="bg-light p-2 rounded small mb-2">
+                <strong>Strength:</strong> Barbell Squats | 60 KG | 10 Reps
+            </div>
+            <div class="bg-light p-2 rounded small">
+                <strong>Cardio:</strong> Cycling | 15 Mins | Med Intensity
+            </div>
+        </div>
+    </div>
+
+
+    <div id="changePasswordScreen" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">🔒 Change Password</h5>
+            <button type="button" id="pwdBackBtn" class="btn btn-sm btn-secondary">Back</button>
+        </div>
+
+        <div class="card card-custom p-4 bg-white">
+            <form onsubmit="alert('Password Changed Successfully!'); document.getElementById('pwdBackBtn').click(); return false;">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">CURRENT PASSWORD</label>
+                    <input type="password" class="form-control" placeholder="Enter current password" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">NEW PASSWORD</label>
+                    <input type="password" class="form-control" placeholder="Enter new secret password" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary">CONFIRM NEW PASSWORD</label>
+                    <input type="password" class="form-control" placeholder="Re-type new password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">UPDATE PASSWORD</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let previousScreenBeforePassword = 'loginScreen';
+
+function showScreen(screenId) {
+    const screens = document.querySelectorAll('.app-screen');
+    screens.forEach(screen => screen.classList.remove('active-screen'));
+    document.getElementById(screenId).classList.add('active-screen');
+    window.scrollTo(0, 0);
+}
+
+// NEW: Function to navigate to Change Password screen smoothly
+function openPasswordChange(fromScreenId) {
+    previousScreenBeforePassword = fromScreenId;
+    document.getElementById('pwdBackBtn').setAttribute('onclick', `showScreen('${fromScreenId}')`);
+    showScreen('changePasswordScreen');
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    const user = document.getElementById('username').value.trim().toLowerCase();
+    
+    if (user === 'trainer' || user === 'pt') {
+        showScreen('trainerDashboard');
+    } else {
+        const displayUsername = document.getElementById('username').value;
+        document.getElementById('clientWelcome').innerText = "👋 Welcome, " + displayUsername;
+        showScreen('traineeDashboard');
+    }
+}
+
+function logout() {
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    showScreen('loginScreen');
+}
+
+function addDynamicRow(sectionId, type) {
+    const section = document.getElementById(sectionId);
+    const newRow = document.createElement('div');
+    newRow.className = 'row g-1 log-row align-items-center';
+    
+    let inputsHtml = '';
+    if (type === 'strength') {
+        inputsHtml = `
+            <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
+            <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Weight"></div>
+            <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Reps"></div>
+            <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
+        `;
+    } else {
+        inputsHtml = `
+            <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
+            <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Time"></div>
+            <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Int."></div>
+            <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
+        `;
+    }
+    
+    newRow.innerHTML = inputsHtml + `
+        <div class="col-1 text-end">
+            <button type="button" class="btn btn-sm btn-outline-danger py-0 px-1 fw-bold" style="font-size:11px;" onclick="removeRow(this)">X</button>
+        </div>
+    `;
+    section.appendChild(newRow);
+}
+
+function removeRow(button) {
+    button.closest('.log-row').remove();
+}
+
+document.getElementById('logDate').valueAsDate = new Date();
+</script>
+
+</body>
+</html>
