@@ -41,17 +41,18 @@
             white-space: nowrap;
         }
 
-        /* 2026 Trend: Single Row Stacked Button Styles with 3D Glassmorphism Icons */
+        /* 2026 Trend: Single Row Stacked Button Styles - UPDATED TO CENTER ALIGNMENT */
         .btn-stacked-action {
             width: 100%;
             display: flex;
+            flex-direction: column; /* Stack icon and text vertically for perfect centering */
             align-items: center;
-            justify-content: flex-start; /* Left aligned for systematic layout */
-            padding: 14px 20px;
+            justify-content: center;
+            padding: 20px 16px;
             font-weight: 700;
             font-size: 16px;
-            border-radius: 16px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             border: none;
             transition: all 0.2s ease;
             color: white;
@@ -59,35 +60,40 @@
             overflow: hidden;
         }
         
-        /* Interactive tap animation */
         .btn-stacked-action:active {
-            transform: scale(0.97);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transform: scale(0.96);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
         }
 
-        /* 3D Glass Effect Container for Icons */
+        /* Premium 3D Glass Box - CENTERED with bottom margin */
         .icon-3d-box {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 8px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            padding: 10px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 16px;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.1);
-            width: 44px;
-            height: 44px;
+            margin-bottom: 12px; /* Margin bottom instead of right for vertical stacked alignment */
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 6px 12px rgba(0,0,0,0.15);
+            width: 56px;
+            height: 56px;
             flex-shrink: 0;
         }
 
-        /* High Quality 3D Emoji Text Styling */
-        .icon-3d-text {
-            font-size: 24px;
-            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.25)) drop-shadow(0px 1px 2px rgba(0,0,0,0.2));
-            transform: translateZ(0);
+        /* Ultra-Realistic Rendered 3D Icon Text with Advanced Depth Layers */
+        .icon-3d-realtime {
+            font-size: 30px;
+            line-height: 1;
+            /* 3D Depth Simulation Layering */
+            filter: 
+                drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.2)) 
+                drop-shadow(0px 6px 8px rgba(0, 0, 0, 0.35)) 
+                drop-shadow(0px 12px 16px rgba(0, 0, 0, 0.2));
+            transform: perspective(100px) translateZ(5px);
+            display: inline-block;
         }
 
         .section-header { 
@@ -165,7 +171,7 @@
     </div>
 
 
-    <!-- ================= 2. TRAINER DASHBOARD (UPDATED ICONS & GAP) ================= -->
+    <!-- ================= 2. TRAINER DASHBOARD (CENTERED & 3D REALISTIC ICONS) ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
@@ -178,21 +184,21 @@
             </div>
         </div>
         
-        <!-- FIXED GAP: Changed layout to gap-2 (Reduced space by 50% for tighter fit) -->
+        <!-- Stacked Single Column Menu - All Centered Alignment -->
         <div class="d-flex flex-column gap-2 mb-4">
             
-            <!-- Row 1: Manage Trainee (Blue with 3D Effective Glass Icon) -->
+            <!-- Row 1: Manage Trainee (Blue Gradient with Centered 3D Realistic Render Icon) -->
             <button class="btn btn-primary btn-stacked-action" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);" onclick="showScreen('manageTraineesScreen')">
                 <div class="icon-3d-box">
-                    <span class="icon-3d-text">👥</span>
+                    <span class="icon-3d-realtime">🔥</span>
                 </div>
                 <span>Register / Manage Trainee</span>
             </button>
             
-            <!-- Row 2: Workout Log (Green with 3D Effective Glass Icon) -->
+            <!-- Row 2: Workout Log (Green Gradient with Centered 3D Realistic Render Icon) -->
             <button class="btn btn-success btn-stacked-action" style="background: linear-gradient(135deg, #16a34a, #15803d);" onclick="showScreen('addLogScreen')">
                 <div class="icon-3d-box">
-                    <span class="icon-3d-text">📝</span>
+                    <span class="icon-3d-realtime">💪</span>
                 </div>
                 <span>Add Workout Log</span>
             </button>
@@ -201,7 +207,7 @@
             <div class="mt-5 pt-2">
                 <button class="btn btn-dark btn-stacked-action" style="background: linear-gradient(135deg, #1e293b, #0f172a);" onclick="showScreen('viewLogsScreen')">
                     <div class="icon-3d-box">
-                        <span class="icon-3d-text">🔍</span>
+                        <span class="icon-3d-realtime">📊</span>
                     </div>
                     <span>View & Search Logs</span>
                 </button>
