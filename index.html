@@ -41,58 +41,59 @@
             white-space: nowrap;
         }
 
-        /* 2026 Trend: Single Row Stacked Button Styles - UPDATED TO CENTER ALIGNMENT */
+        /* 2026 Premium Trend: Stacked Buttons with 100% Center Alignment */
         .btn-stacked-action {
             width: 100%;
             display: flex;
-            flex-direction: column; /* Stack icon and text vertically for perfect centering */
+            flex-direction: column; /* Stacks Icon on top of text for total balance */
             align-items: center;
             justify-content: center;
-            padding: 20px 16px;
+            padding: 18px 20px;
             font-weight: 700;
             font-size: 16px;
             border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08), inset 0 1px 1px rgba(255,255,255,0.2);
             border: none;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             color: white;
             position: relative;
-            overflow: hidden;
         }
         
         .btn-stacked-action:active {
             transform: scale(0.96);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
         }
 
-        /* Premium 3D Glass Box - CENTERED with bottom margin */
+        /* Premium Real 3D Glassmorphism Box */
         .icon-3d-box {
-            background: rgba(255, 255, 255, 0.22);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.45);
-            padding: 10px;
-            border-radius: 16px;
+            padding: 8px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px; /* Margin bottom instead of right for vertical stacked alignment */
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 6px 12px rgba(0,0,0,0.15);
-            width: 56px;
-            height: 56px;
-            flex-shrink: 0;
+            margin-bottom: 10px; /* Space between icon and centered text */
+            box-shadow: 
+                inset 0 2px 4px rgba(255,255,255,0.4), 
+                0 6px 12px rgba(0,0,0,0.15),
+                0 1px 3px rgba(0,0,0,0.1);
+            width: 52px;
+            height: 52px;
+            transition: all 0.2s ease;
         }
 
-        /* Ultra-Realistic Rendered 3D Icon Text with Advanced Depth Layers */
-        .icon-3d-realtime {
-            font-size: 30px;
-            line-height: 1;
-            /* 3D Depth Simulation Layering */
+        /* Real 3D Pop/Pixel Picture Effect Styling */
+        .icon-3d-text {
+            font-size: 28px;
+            /* Multi-layered shadows create a distinct 3D depth pop out of the screen */
             filter: 
-                drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.2)) 
-                drop-shadow(0px 6px 8px rgba(0, 0, 0, 0.35)) 
-                drop-shadow(0px 12px 16px rgba(0, 0, 0, 0.2));
-            transform: perspective(100px) translateZ(5px);
+                drop-shadow(0px 2px 1px rgba(0,0,0,0.2))
+                drop-shadow(0px 5px 8px rgba(0,0,0,0.35)) 
+                drop-shadow(0px 12px 16px rgba(0,0,0,0.2));
+            transform: perspective(100px) translateZ(10px);
             display: inline-block;
         }
 
@@ -171,7 +172,7 @@
     </div>
 
 
-    <!-- ================= 2. TRAINER DASHBOARD (CENTERED & 3D REALISTIC ICONS) ================= -->
+    <!-- ================= 2. TRAINER DASHBOARD (100% CENTERED UI WITH REAL 3D POP) ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
@@ -184,32 +185,32 @@
             </div>
         </div>
         
-        <!-- Stacked Single Column Menu - All Centered Alignment -->
+        <!-- Stacked Column Layout with Tightened Gap-2 & Complete Center Alignment -->
         <div class="d-flex flex-column gap-2 mb-4">
             
-            <!-- Row 1: Manage Trainee (Blue Gradient with Centered 3D Realistic Render Icon) -->
+            <!-- Row 1: Manage Trainee (Centered with Realistic 3D Pop Icon) -->
             <button class="btn btn-primary btn-stacked-action" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);" onclick="showScreen('manageTraineesScreen')">
                 <div class="icon-3d-box">
-                    <span class="icon-3d-realtime">🔥</span>
+                    <span class="icon-3d-text">👥</span>
                 </div>
-                <span>Register / Manage Trainee</span>
+                <span class="w-100 text-center">Register / Manage Trainee</span>
             </button>
             
-            <!-- Row 2: Workout Log (Green Gradient with Centered 3D Realistic Render Icon) -->
+            <!-- Row 2: Workout Log (Centered with Realistic 3D Pop Icon) -->
             <button class="btn btn-success btn-stacked-action" style="background: linear-gradient(135deg, #16a34a, #15803d);" onclick="showScreen('addLogScreen')">
                 <div class="icon-3d-box">
-                    <span class="icon-3d-realtime">💪</span>
+                    <span class="icon-3d-text">📝</span>
                 </div>
-                <span>Add Workout Log</span>
+                <span class="w-100 text-center">Add Workout Log</span>
             </button>
             
-            <!-- Row 3: Search Logs at the bottom with explicit top margin for focus -->
+            <!-- Row 3: Search Logs at bottom with extra large spacing (mt-5) -->
             <div class="mt-5 pt-2">
                 <button class="btn btn-dark btn-stacked-action" style="background: linear-gradient(135deg, #1e293b, #0f172a);" onclick="showScreen('viewLogsScreen')">
                     <div class="icon-3d-box">
-                        <span class="icon-3d-realtime">📊</span>
+                        <span class="icon-3d-text">🔍</span>
                     </div>
-                    <span>View & Search Logs</span>
+                    <span class="w-100 text-center">View & Search Logs</span>
                 </button>
             </div>
             
