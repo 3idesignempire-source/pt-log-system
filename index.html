@@ -45,7 +45,7 @@
         .btn-stacked-action {
             width: 100%;
             display: flex;
-            flex-direction: column; /* Stacked vertically for centered look */
+            flex-direction: column; 
             align-items: center;
             justify-content: center;
             padding: 20px 16px;
@@ -57,6 +57,7 @@
             transition: all 0.2s ease;
             color: white;
             text-align: center;
+            cursor: pointer; /* Ensures mouse connection triggers pointer */
         }
         
         /* Interactive tap animation */
@@ -76,9 +77,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px; /* Bottom spacing because title is centered underneath */
-            
-            /* Realistic 3D glass rendering shaders */
+            margin-bottom: 12px; 
             box-shadow: 
                 inset 0 3px 6px rgba(255,255,255,0.4), 
                 inset 0 -3px 6px rgba(0,0,0,0.1),
@@ -86,24 +85,24 @@
             width: 56px;
             height: 56px;
             flex-shrink: 0;
+            pointer-events: none; /* Prevents inner icon container from blocking the click */
         }
 
         /* Ultra-Realistic 3D Glowing Emoji/Picture Shader */
         .icon-3d-text {
             font-size: 30px;
-            /* 3-Layer lighting drop shadows to mimic actual 3D physical depth */
             filter: 
                 drop-shadow(0px 5px 8px rgba(0,0,0,0.35)) 
                 drop-shadow(0px 1px 2px rgba(0,0,0,0.25))
-                saturate(1.4); /* High color saturation for beautiful organic look */
+                saturate(1.4); 
             transform: translateZ(0);
-            animation: float3d 3s ease-in-out infinite alternate;
+            pointer-events: none;
         }
 
-        /* Text styling under the centered icon */
         .btn-label-centered {
             letter-spacing: 0.3px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+            pointer-events: none; /* Prevents text from blocking mouse clicks */
         }
 
         .section-header { 
@@ -122,7 +121,6 @@
         .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
         .btn-del-custom:hover { background-color: #dc2626; color: white; }
         
-        /* Modern Accordion Custom Styles for Creative View Logs */
         .accordion-button-custom {
             background-color: #ffffff;
             color: #1e293b;
@@ -146,8 +144,6 @@
         .badge-warmup { background-color: #eff6ff; color: #1d4ed8; }
         .badge-strength { background-color: #fef2f2; color: #991b1b; }
         .badge-cardio { background-color: #f0fdf4; color: #166534; }
-        
-        /* Copyright styling */
         .copyright-text { font-size: 11px; color: #94a3b8; margin-top: 30px; letter-spacing: 0.5px; }
     </style>
 </head>
@@ -181,7 +177,7 @@
     </div>
 
 
-    <!-- ================= 2. TRAINER DASHBOARD (CENTERED & 3D REAL IMAGE EFFECT) ================= -->
+    <!-- ================= 2. TRAINER DASHBOARD ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
@@ -194,37 +190,30 @@
             </div>
         </div>
         
-        <!-- FIXED GAP-2: Maintained the tighter 50% gap layout -->
         <div class="d-flex flex-column gap-2 mb-4">
-            
-            <!-- Row 1: Manage Trainee (Center Aligned, 3D Glowing Glass Portrait Icon) -->
-            <button class="btn btn-primary btn-stacked-action" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);" onclick="showScreen('manageTraineesScreen')">
+            <!-- Fixed Mouse/Touch Click Target Logic -->
+            <button type="button" class="btn btn-primary btn-stacked-action" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);" onclick="showScreen('manageTraineesScreen')">
                 <div class="icon-3d-box">
                     <span class="icon-3d-text">👥</span>
                 </div>
                 <span class="btn-label-centered">Register / Manage Trainee</span>
             </button>
             
-            <!-- Row 2: Workout Log (Center Aligned, 3D Glowing Glass Portrait Icon) -->
-            <button class="btn btn-success btn-stacked-action" style="background: linear-gradient(135deg, #22c55e, #15803d);" onclick="showScreen('addLogScreen')">
+            <button type="button" class="btn btn-success btn-stacked-action" style="background: linear-gradient(135deg, #22c55e, #15803d);" onclick="showScreen('addLogScreen')">
                 <div class="icon-3d-box">
                     <span class="icon-3d-text">📝</span>
                 </div>
                 <span class="btn-label-centered">Add Workout Log</span>
             </button>
             
-            <!-- Future rows can be dropped right here seamlessly! -->
-            
-            <!-- Row 3: Search Logs at the bottom with explicit space -->
             <div class="mt-5 pt-2">
-                <button class="btn btn-dark btn-stacked-action" style="background: linear-gradient(135deg, #475569, #0f172a);" onclick="showScreen('viewLogsScreen')">
+                <button type="button" class="btn btn-dark btn-stacked-action" style="background: linear-gradient(135deg, #475569, #0f172a);" onclick="showScreen('viewLogsScreen')">
                     <div class="icon-3d-box">
                         <span class="icon-3d-text">🔍</span>
                     </div>
                     <span class="btn-label-centered">View & Search Logs</span>
                 </button>
             </div>
-            
         </div>
     </div>
 
@@ -261,14 +250,6 @@
                                 <button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size: 12px;" onclick="alert('Delete Clicked')">Del</button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Jane Smith</td>
-                            <td>janesmith</td>
-                            <td class="text-end">
-                                <button class="btn btn-xs btn-edit-custom py-0 px-2 rounded me-1" style="font-size: 12px;" onclick="alert('Edit Clicked')">Edit</button>
-                                <button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size: 12px;" onclick="alert('Delete Clicked')">Del</button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -285,70 +266,33 @@
 
         <div class="card card-custom p-3 bg-white">
             <form onsubmit="alert('Log saved!'); showScreen('trainerDashboard'); return false;">
-                
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary small">SELECT ACTIVE TRAINEE</label>
                     <select class="form-select" id="logTraineeSelect" required>
                         <option value="">-- Choose Trainee --</option>
                         <option value="John Doe">John Doe</option>
-                        <option value="Jane Smith">Jane Smith</option>
                     </select>
                 </div>
-                
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary small">DATE</label>
                     <input type="date" id="logDate" class="form-control" required>
                 </div>
-                
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary small">WORKOUT PROGRAM FOR THE DAY</label>
-                    <textarea class="form-control" rows="2" placeholder="e.g., Push Day / Upper Body Focus"></textarea>
+                    <textarea class="form-control" rows="2" placeholder="e.g., Push Day"></textarea>
                 </div>
 
-                <!-- Warm Up Section -->
                 <div class="d-flex justify-content-between align-items-center section-header mb-2">
                     <span>WARM UP</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:12px;" onclick="addDynamicRow('warmupSection', 'warmup')">+ Add</button>
                 </div>
-                <div id="warmupSection">
-                    <div class="row g-1 log-row align-items-center">
-                        <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
-                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Time"></div>
-                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Int."></div>
-                        <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
-                        <div class="col-1 text-end"></div>
-                    </div>
-                </div>
+                <div id="warmupSection"></div>
 
-                <!-- Strength Training Section -->
                 <div class="d-flex justify-content-between align-items-center section-header mb-2 mt-3">
                     <span>STRENGTH TRAINING</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:12px;" onclick="addDynamicRow('strengthSection', 'strength')">+ Add</button>
                 </div>
-                <div id="strengthSection">
-                    <div class="row g-1 log-row align-items-center">
-                        <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
-                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Weight"></div>
-                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Reps"></div>
-                        <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
-                        <div class="col-1 text-end"></div>
-                    </div>
-                </div>
-
-                <!-- Cardio Training Section -->
-                <div class="d-flex justify-content-between align-items-center section-header mb-2 mt-3">
-                    <span>CARDIO TRAINING</span>
-                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:12px;" onclick="addDynamicRow('cardioSection', 'cardio')">+ Add</button>
-                </div>
-                <div id="cardioSection">
-                    <div class="row g-1 log-row align-items-center">
-                        <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
-                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Time"></div>
-                        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Int."></div>
-                        <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
-                        <div class="col-1 text-end"></div>
-                    </div>
-                </div>
+                <div id="strengthSection"></div>
 
                 <button type="submit" class="btn btn-success w-100 fw-bold mt-4 py-2">SUBMIT WORKOUT LOG</button>
             </form>
@@ -363,66 +307,34 @@
             <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
         </div>
 
-        <!-- Filter Controls -->
         <div class="card card-custom p-3 bg-white mb-3">
             <div class="row g-2">
                 <div class="col-6">
                     <select class="form-select form-select-sm">
-                        <option value="">Select Trainee</option>
-                        <option selected>John Doe</option>
-                        <option>Jane Smith</option>
+                        <option>John Doe</option>
                     </select>
                 </div>
                 <div class="col-6"><input type="date" class="form-control form-control-sm" value="2026-07-17"></div>
-                <div class="col-12"><button class="btn btn-sm btn-primary w-100 fw-bold" onclick="alert('Filtering Logs Summary...')">SEARCH LOGS</button></div>
+                <div class="col-12"><button class="btn btn-sm btn-primary w-100 fw-bold" onclick="alert('Searching...')">SEARCH LOGS</button></div>
             </div>
         </div>
 
-        <h6 class="fw-semibold text-secondary mb-2 small px-1">WORKOUT HISTORY RESULT</h6>
-
-        <!-- Creative Accordion List -->
         <div class="accordion" id="workoutLogsAccordion">
-            
-            <!-- Log Card 1 -->
             <div class="card card-custom mb-2 overflow-hidden border">
                 <div class="card-header p-0 border-0 bg-white">
-                    <button class="btn w-100 text-start p-3 d-flex justify-content-between align-items-center accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#logOne" aria-expanded="true">
+                    <button class="btn w-100 text-start p-3 d-flex justify-content-between align-items-center accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#logOne">
                         <div>
                             <span class="d-block fw-bold text-dark">John Doe</span>
-                            <span class="text-muted small fw-normal">🎯 Program: Chest & Triceps Focus</span>
+                            <span class="text-muted small fw-normal">🎯 Chest Focus</span>
                         </div>
-                        <span class="badge bg-primary rounded-pill small">Today</span>
                     </button>
                 </div>
                 <div id="logOne" class="collapse show" data-bs-parent="#workoutLogsAccordion">
                     <div class="card-body bg-white pt-2 pb-3" style="font-size: 13px;">
-                        <div class="mb-2"><span class="workout-badge badge-warmup">🏃 Warm Up</span> <div class="ps-2 text-secondary mt-1">Treadmill Run | 10 Mins | Med Intensity</div></div>
-                        <div class="mb-2"><span class="workout-badge badge-strength">💪 Strength</span> <div class="ps-2 text-secondary mt-1">Flat Bench Press | 50 KG | 4 Sets x 12 Reps<br>Incline Dumbbell Flyes | 15 KG | 3 Sets x 10 Reps</div></div>
-                        <div><span class="workout-badge badge-cardio">🚴 Cardio</span> <div class="ps-2 text-secondary mt-1">Cycling | 15 Mins | High Pace</div></div>
+                        <div class="mb-2"><span class="workout-badge badge-strength">💪 Strength</span> <div class="ps-2 text-secondary mt-1">Bench Press | 50 KG</div></div>
                     </div>
                 </div>
             </div>
-
-            <!-- Log Card 2 -->
-            <div class="card card-custom mb-2 overflow-hidden border">
-                <div class="card-header p-0 border-0 bg-white">
-                    <button class="btn w-100 text-start p-3 d-flex justify-content-between align-items-center accordion-button-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#logTwo" aria-expanded="false">
-                        <div>
-                            <span class="d-block fw-bold text-dark">John Doe</span>
-                            <span class="text-muted small fw-normal">🎯 Program: Heavy Leg Day Focus</span>
-                        </div>
-                        <span class="badge bg-secondary rounded-pill small">15-Jul-2026</span>
-                    </button>
-                </div>
-                <div id="logTwo" class="collapse" data-bs-parent="#workoutLogsAccordion">
-                    <div class="card-body bg-white pt-2 pb-3" style="font-size: 13px;">
-                        <div class="mb-2"><span class="workout-badge badge-warmup">🏃 Warm Up</span> <div class="ps-2 text-secondary mt-1">Dynamic Stretching | 5 Mins</div></div>
-                        <div class="mb-2"><span class="workout-badge badge-strength">💪 Strength</span> <div class="ps-2 text-secondary mt-1">Barbell Squats | 80 KG | 4 Sets x 8 Reps<br>Leg Press Machine | 120 KG | 3 Sets x 12 Reps</div></div>
-                        <div><span class="workout-badge badge-cardio">🚴 Cardio</span> <div class="ps-2 text-secondary mt-1">None Assigned</div></div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -439,20 +351,6 @@
                 <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
             </div>
         </div>
-
-        <div class="card card-custom p-3 bg-white mb-2">
-            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-                <span class="fw-bold text-success">Today's Workout</span>
-                <span class="text-secondary small fw-medium">2026-07-17</span>
-            </div>
-            <p class="mb-2 small"><strong>Program Assigned by PT:</strong> Leg Day Intensity</p>
-            <div class="bg-light p-2 rounded small mb-2">
-                <strong>Strength:</strong> Barbell Squats | 60 KG | 10 Reps
-            </div>
-            <div class="bg-light p-2 rounded small">
-                <strong>Cardio:</strong> Cycling | 15 Mins | Med Intensity
-            </div>
-        </div>
     </div>
 
 
@@ -462,29 +360,11 @@
             <h5 class="fw-bold mb-0">🔒 Change Password</h5>
             <button type="button" id="pwdBackBtn" class="btn btn-sm btn-secondary">Back</button>
         </div>
-
-        <div class="card card-custom p-4 bg-white">
-            <form onsubmit="alert('Password Changed Successfully!'); document.getElementById('pwdBackBtn').click(); return false;">
-                <div class="mb-3">
-                    <label class="form-label small fw-semibold text-secondary">CURRENT PASSWORD</label>
-                    <input type="password" class="password-field form-control" placeholder="Enter current password" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small fw-semibold text-secondary">NEW PASSWORD</label>
-                    <input type="password" class="password-field form-control" placeholder="Enter new secret password" required>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label small fw-semibold text-secondary">CONFIRM NEW PASSWORD</label>
-                    <input type="password" class="password-field form-control" placeholder="Re-type new password" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">UPDATE PASSWORD</button>
-            </form>
-        </div>
     </div>
 
 </div>
 
-<!-- Bootstrap 5 JS Bundle with Popper -->
+<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- JavaScript Logic -->
@@ -529,22 +409,12 @@ function addDynamicRow(sectionId, type) {
     const newRow = document.createElement('div');
     newRow.className = 'row g-1 log-row align-items-center';
     
-    let inputsHtml = '';
-    if (type === 'strength') {
-        inputsHtml = `
-            <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
-            <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Weight"></div>
-            <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Reps"></div>
-            <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
-        `;
-    } else {
-        inputsHtml = `
-            <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
-            <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Time"></div>
-            <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Int."></div>
-            <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
-        `;
-    }
+    let inputsHtml = `
+        <div class="col-4"><input type="text" class="form-control form-control-sm" placeholder="Activity" required></div>
+        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Vol"></div>
+        <div class="col-2"><input type="text" class="form-control form-control-sm" placeholder="Reps"></div>
+        <div class="col-3"><input type="text" class="form-control form-control-sm" placeholder="Notes"></div>
+    `;
     
     newRow.innerHTML = inputsHtml + `
         <div class="col-1 text-end">
