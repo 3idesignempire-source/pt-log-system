@@ -41,26 +41,21 @@
             white-space: nowrap;
         }
 
-        /* Fixed Equal Height Buttons Feature */
-        .dashboard-btn-grid {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .btn-grid-item {
-            display: flex;
-            align-items: stretch; /* Forces equal height for columns */
-        }
-        .btn-custom-action {
+        /* NEW: Single Row Stacked Button Styles for Scalability */
+        .btn-stacked-action {
             width: 100%;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 16px 10px;
+            justify-content: center;
+            padding: 16px;
             font-weight: 600;
-            font-size: 14px;
-            line-height: 1.3;
+            font-size: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            transition: transform 0.1s ease;
+        }
+        .btn-stacked-action:active {
+            transform: scale(0.98);
         }
 
         .section-header { 
@@ -138,7 +133,7 @@
     </div>
 
 
-    <!-- ================= 2. TRAINER DASHBOARD (FIXED EQUAL HEIGHT BUTTONS) ================= -->
+    <!-- ================= 2. TRAINER DASHBOARD (NEW ROW-BY-ROW LAYOUT) ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
@@ -151,21 +146,28 @@
             </div>
         </div>
         
-        <!-- FIXED: Applied align-items-stretch grid layout for exact uniform heights -->
-        <div class="row g-2 mb-4 dashboard-btn-grid">
-            <div class="col-6 btn-grid-item">
-                <button class="btn btn-primary card-custom text-white btn-custom-action" style="background-color: #2563eb;" onclick="showScreen('manageTraineesScreen')">
-                    <span>👥 Register / Manage Trainee</span>
+        <!-- NEW: Stacked Single Column Menu for Easy Future Feature Additions -->
+        <div class="d-flex flex-column gap-3 mb-4">
+            
+            <!-- Row 1: Manage Trainee (Blue) -->
+            <button class="btn btn-primary btn-stacked-action border-0" style="background-color: #2563eb;" onclick="showScreen('manageTraineesScreen')">
+                👥 Register / Manage Trainee
+            </button>
+            
+            <!-- Row 2: Workout Log (Green) -->
+            <button class="btn btn-success btn-stacked-action border-0" style="background-color: #16a34a;" onclick="showScreen('addLogScreen')">
+                📝 Add Workout Log
+            </button>
+            
+            <!-- Future rows can be added here easily! -->
+            
+            <!-- Row 3: Search Logs placed at the BOTTOM with extra large space (mt-5) -->
+            <div class="mt-5 pt-3">
+                <button class="btn btn-dark btn-stacked-action border-0" style="background-color: #0f172a;" onclick="showScreen('viewLogsScreen')">
+                    🔍 View & Search Logs
                 </button>
             </div>
-            <div class="col-6 btn-grid-item">
-                <button class="btn btn-success card-custom btn-custom-action" style="background-color: #16a34a;" onclick="showScreen('addLogScreen')">
-                    <span>📝 Add Workout Log</span>
-                </button>
-            </div>
-            <div class="col-12 mt-2">
-                <button class="btn btn-dark w-100 py-3 fw-semibold card-custom" style="background-color: #0f172a;" onclick="showScreen('viewLogsScreen')">🔍 View & Search Logs</button>
-            </div>
+            
         </div>
     </div>
 
