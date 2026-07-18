@@ -24,7 +24,7 @@
         }
         .header-title-section { flex: 1; padding-right: 8px; }
         .header-btn-group { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
-        .btn-header-action { font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+        .btn-header-action { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 8px; white-space: nowrap; }
 
         /* Mouse Click Fix Button Layout */
         .btn-stacked-action {
@@ -75,4 +75,43 @@
         /* Logsheet Sections Styling */
         .section-header-orange { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
         .section-header-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
-        .section-header-green { background: linear-gradient(135deg, #10b9
+        .section-header-green { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
+        
+        .log-row-container { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+        .log-row { margin-bottom: 6px; }
+        .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
+        
+        .accordion-button-custom {
+            background-color: #ffffff; color: #1e293b; font-weight: 600; border-radius: 10px !important; border: 1px solid #e2e8f0;
+        }
+        .accordion-button-custom:not(.collapsed) { background-color: #f8fafc; color: #2563eb; border-bottom: 1px dashed #cbd5e1; box-shadow: none; }
+        
+        .workout-badge { font-size: 11px; padding: 3px 6px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 4px; margin-bottom: 2px; }
+        .badge-warmup { background-color: #fff7ed; color: #c2410c; }
+        .badge-strength { background-color: #eff6ff; color: #1d4ed8; }
+        .badge-cardio { background-color: #ecfdf5; color: #047857; }
+        
+        .copyright-text { font-size: 11px; color: #94a3b8; margin-top: 30px; letter-spacing: 0.5px; }
+    </style>
+</head>
+<body>
+
+<div class="container my-4" style="max-width: 600px;">
+
+    <div id="loginScreen" class="app-screen active-screen">
+        <div class="card card-custom p-4 bg-white text-center">
+            <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
+            <p class="text-muted small mb-4">Track workouts, achieve goals.</p>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-3 text-start">
+                    <label class="form-label small fw-semibold text-secondary">USERNAME</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username" required>
+                </div>
+                <div class="mb-4 text-start">
+                    <label class="form-label small fw-semibold text-secondary">PASSWORD</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">LOGIN</button>
+            </form>
+            <div class="copyright-text">&copy; 2026 <span class="fw-
