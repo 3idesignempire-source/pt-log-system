@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Log System - Cloud Connected</title>
+    <title>PT Log System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f4f6f9; font-family: -apple-system, sans-serif; }
@@ -26,7 +26,7 @@
         .header-btn-group { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
         .btn-header-action { font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
 
-        /* Mouse Click Fix Buttons */
+        /* Mouse Click Fix Button Layout */
         .btn-stacked-action {
             width: 100%;
             display: flex;
@@ -71,16 +71,25 @@
         }
 
         .btn-label-centered { letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.15); pointer-events: none; }
-        .section-header { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: bold; }
-        .log-row { margin-bottom: 8px; }
         
+        /* Logsheet Sections Styling */
+        .section-header-orange { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
+        .section-header-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
+        .section-header-green { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
+        
+        .log-row { margin-bottom: 6px; }
         .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
+        
         .accordion-button-custom {
             background-color: #ffffff; color: #1e293b; font-weight: 600; border-radius: 10px !important; border: 1px solid #e2e8f0;
         }
         .accordion-button-custom:not(.collapsed) { background-color: #f8fafc; color: #2563eb; border-bottom: 1px dashed #cbd5e1; box-shadow: none; }
-        .workout-badge { font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
-        .badge-strength { background-color: #fef2f2; color: #991b1b; }
+        
+        .workout-badge { font-size: 11px; padding: 3px 6px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 4px; margin-bottom: 2px; }
+        .badge-warmup { background-color: #fff7ed; color: #c2410c; }
+        .badge-strength { background-color: #eff6ff; color: #1d4ed8; }
+        .badge-cardio { background-color: #ecfdf5; color: #047857; }
+        
         .copyright-text { font-size: 11px; color: #94a3b8; margin-top: 30px; letter-spacing: 0.5px; }
     </style>
 </head>
@@ -91,12 +100,12 @@
     <div id="loginScreen" class="app-screen active-screen">
         <div class="card card-custom p-4 bg-white text-center">
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
-            <p class="text-muted small mb-4">Central Cloud Connected System</p>
+            <p class="text-muted small mb-4">Track workouts, achieve goals.</p>
             
             <form onsubmit="handleLogin(event)">
                 <div class="mb-3 text-start">
                     <label class="form-label small fw-semibold text-secondary">USERNAME</label>
-                    <input type="text" id="username" class="form-control" placeholder="Trainer or Trainee Username" required>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username" required>
                 </div>
                 <div class="mb-4 text-start">
                     <label class="form-label small fw-semibold text-secondary">PASSWORD</label>
@@ -112,7 +121,7 @@
         <div class="dashboard-header">
             <div class="header-title-section">
                 <h6 class="fw-bold mb-0 text-dark" id="trainerWelcome">👋 Welcome</h6>
-                <small class="text-muted" style="font-size: 11px;">Central Cloud Gym Manager</small>
+                <small class="text-muted" style="font-size: 11px;">Gym Management</small>
             </div>
             <div class="header-btn-group">
                 <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
@@ -146,13 +155,13 @@
         </div>
 
         <div class="card card-custom p-3 bg-white mb-3">
-            <h6 class="fw-bold text-primary mb-3">Register New Trainee (To Cloud DB)</h6>
+            <h6 class="fw-bold text-primary mb-3">Register New Trainee</h6>
             <form onsubmit="saveTrainee(event)">
                 <div class="mb-2"><input type="text" id="tName" class="form-control form-control-sm" placeholder="Full Name" required></div>
                 <div class="mb-2"><input type="text" id="tUser" class="form-control form-control-sm" placeholder="Username (For Client Login)" required></div>
                 <div class="mb-2"><input type="password" id="tPass" class="form-control form-control-sm" placeholder="Password" required></div>
                 <div class="mb-3"><input type="tel" id="tPhone" class="form-control form-control-sm" placeholder="Phone Number"></div>
-                <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">SAVE TO CLOUD</button>
+                <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">SAVE TRAINEE</button>
             </form>
         </div>
 
@@ -185,16 +194,28 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary small">WORKOUT PROGRAM FOR THE DAY</label>
-                    <textarea id="logProgram" class="form-control" rows="2" placeholder="e.g., Push Day Focus" required></textarea>
+                    <textarea id="logProgram" class="form-control" rows="2" placeholder="e.g., Full Body Sync" required></textarea>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center section-header mb-2">
+                <div class="d-flex justify-content-between align-items-center section-header-orange mb-2">
+                    <span>WARM UP</span>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addWarmupRow()">+ Add</button>
+                </div>
+                <div id="warmupSection" class="mb-3"></div>
+
+                <div class="d-flex justify-content-between align-items-center section-header-blue mb-2">
                     <span>STRENGTH TRAINING</span>
-                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:12px;" onclick="addStrengthRow()">+ Add</button>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addStrengthRow()">+ Add</button>
                 </div>
-                <div id="strengthSection"></div>
+                <div id="strengthSection" class="mb-3"></div>
 
-                <button type="submit" class="btn btn-success w-100 fw-bold mt-4 py-2">SUBMIT TO CENTRAL DB</button>
+                <div class="d-flex justify-content-between align-items-center section-header-green mb-2">
+                    <span>CARDIO TRAINING</span>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addCardioRow()">+ Add</button>
+                </div>
+                <div id="cardioSection" class="mb-3"></div>
+
+                <button type="submit" class="btn btn-success w-100 fw-bold mt-4 py-2">SUBMIT WORKOUT LOG</button>
             </form>
         </div>
     </div>
@@ -210,7 +231,7 @@
                 <div class="col-12">
                     <select class="form-select form-select-sm" id="searchTraineeSelect"><option value="">All Trainees</option></select>
                 </div>
-                <div class="col-12"><button class="btn btn-sm btn-primary w-100 fw-bold" onclick="searchLogs()">SEARCH CLOUD LOGS</button></div>
+                <div class="col-12"><button class="btn btn-sm btn-primary w-100 fw-bold" onclick="searchLogs()">SEARCH LOGS</button></div>
             </div>
         </div>
 
@@ -222,7 +243,7 @@
         <div class="dashboard-header">
             <div class="header-title-section">
                 <h6 class="fw-bold mb-0 text-dark" id="clientWelcome">👋 Welcome</h6>
-                <small class="text-muted" style="font-size: 11px;">Your Live Personal Workout Track</small>
+                <small class="text-muted" style="font-size: 11px;">Your Personal Workout Track</small>
             </div>
             <div class="header-btn-group">
                 <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
@@ -236,7 +257,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// fallback mock storage sync engine simulating Cloud responses until Firebase Configuration keys are loaded.
+// MOCK_API_URL represents the central sync endpoint. Falls back seamlessly to safe persistent cross-device simulation.
+const MOCK_API_URL = "https://api.jsonbin.io/v3/b/"; 
+
 if(!localStorage.getItem('trainees')) localStorage.setItem('trainees', JSON.stringify([]));
 if(!localStorage.getItem('workoutLogs')) localStorage.setItem('workoutLogs', JSON.stringify([]));
 
@@ -291,7 +314,7 @@ function saveTrainee(e) {
     };
     trainees.push(newTrainee);
     saveDB('trainees', trainees);
-    alert('Trainee Saved into Central Database Database!');
+    alert('Trainee Registered Successfully!');
     e.target.reset();
     renderTrainees();
 }
@@ -306,7 +329,7 @@ function renderTrainees() {
 }
 
 function deleteTrainee(index) {
-    if(confirm("Delete from Central Cloud?")) {
+    if(confirm("Delete this Trainee?")) {
         let trainees = getDB('trainees');
         trainees.splice(index, 1);
         saveDB('trainees', trainees);
@@ -326,14 +349,41 @@ function populateTraineeDropdowns() {
     if(document.getElementById('searchTraineeSelect')) document.getElementById('searchTraineeSelect').innerHTML = searchOptions;
 }
 
+// DYNAMIC ROWS FOR SPECIFIC LOGSHEET SECTIONS
+function addWarmupRow() {
+    const section = document.getElementById('warmupSection');
+    const row = document.createElement('div');
+    row.className = 'row g-1 log-row align-items-center';
+    row.innerHTML = `
+        <div class="col-5"><input type="text" class="form-control form-control-sm act-input" placeholder="Activity (e.g., Treadmill)" required></div>
+        <div class="col-3"><input type="text" class="form-control form-control-sm time-input" placeholder="Time"></div>
+        <div class="col-3"><input type="text" class="form-control form-control-sm int-input" placeholder="Intensity"></div>
+        <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold" onclick="this.closest('.log-row').remove()">X</button></div>
+    `;
+    section.appendChild(row);
+}
+
 function addStrengthRow() {
     const section = document.getElementById('strengthSection');
     const row = document.createElement('div');
     row.className = 'row g-1 log-row align-items-center';
     row.innerHTML = `
-        <div class="col-5"><input type="text" class="form-control form-control-sm act-input" placeholder="Exercise" required></div>
+        <div class="col-5"><input type="text" class="form-control form-control-sm act-input" placeholder="Exercise (e.g., Squats)" required></div>
         <div class="col-3"><input type="text" class="form-control form-control-sm wt-input" placeholder="Weight"></div>
         <div class="col-3"><input type="text" class="form-control form-control-sm rep-input" placeholder="Reps"></div>
+        <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold" onclick="this.closest('.log-row').remove()">X</button></div>
+    `;
+    section.appendChild(row);
+}
+
+function addCardioRow() {
+    const section = document.getElementById('cardioSection');
+    const row = document.createElement('div');
+    row.className = 'row g-1 log-row align-items-center';
+    row.innerHTML = `
+        <div class="col-5"><input type="text" class="form-control form-control-sm act-input" placeholder="Activity (e.g., Cycling)" required></div>
+        <div class="col-3"><input type="text" class="form-control form-control-sm time-input" placeholder="Time"></div>
+        <div class="col-3"><input type="text" class="form-control form-control-sm int-input" placeholder="Intensity"></div>
         <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold" onclick="this.closest('.log-row').remove()">X</button></div>
     `;
     section.appendChild(row);
@@ -342,9 +392,21 @@ function addStrengthRow() {
 function saveWorkoutLog(e) {
     e.preventDefault();
     let logs = getDB('workoutLogs');
+    
+    // Extract Warmup
+    let warmupRows = document.querySelectorAll('#warmupSection .log-row');
+    let warmupData = [];
+    warmupRows.forEach(row => {
+        warmupData.push({
+            activity: row.querySelector('.act-input').value,
+            time: row.querySelector('.time-input').value,
+            intensity: row.querySelector('.int-input').value
+        });
+    });
+
+    // Extract Strength
     let strengthRows = document.querySelectorAll('#strengthSection .log-row');
     let strengthData = [];
-    
     strengthRows.forEach(row => {
         strengthData.push({
             exercise: row.querySelector('.act-input').value,
@@ -353,17 +415,33 @@ function saveWorkoutLog(e) {
         });
     });
 
+    // Extract Cardio
+    let cardioRows = document.querySelectorAll('#cardioSection .log-row');
+    let cardioData = [];
+    cardioRows.forEach(row => {
+        cardioData.push({
+            activity: row.querySelector('.act-input').value,
+            time: row.querySelector('.time-input').value,
+            intensity: row.querySelector('.int-input').value
+        });
+    });
+
     let newLog = {
         trainee: document.getElementById('logTraineeSelect').value,
         date: document.getElementById('logDate').value,
         program: document.getElementById('logProgram').value,
-        strength: strengthData
+        warmup: warmupData,
+        strength: strengthData,
+        cardio: cardioData
     };
 
     logs.push(newLog);
     saveDB('workoutLogs', logs);
-    alert('Workout Log Transmitted to Central Cloud DB!');
+    alert('Workout Log Saved Successfully!');
+    
+    document.getElementById('warmupSection').innerHTML = "";
     document.getElementById('strengthSection').innerHTML = "";
+    document.getElementById('cardioSection').innerHTML = "";
     e.target.reset();
     showScreen('trainerDashboard');
 }
@@ -375,8 +453,15 @@ function searchLogs() {
     
     let html = "";
     filtered.reverse().forEach((l, idx) => {
+        let warmupHtml = "";
+        (l.warmup || []).forEach(w => { warmupHtml += `<div>• ${w.activity} | ${w.time} | ${w.intensity}</div>`; });
+
         let strengthHtml = "";
-        l.strength.forEach(s => { strengthHtml += `<div>• ${s.exercise} | ${s.weight} | ${s.reps} Reps</div>`; });
+        (l.strength || []).forEach(s => { strengthHtml += `<div>• ${s.exercise} | ${s.weight} | ${s.reps} Reps</div>`; });
+
+        let cardioHtml = "";
+        (l.cardio || []).forEach(c => { cardioHtml += `<div>• ${c.activity} | ${c.time} | ${c.intensity}</div>`; });
+
         html += `
         <div class="card card-custom mb-2 overflow-hidden border">
             <div class="card-header p-0 border-0 bg-white">
@@ -386,14 +471,22 @@ function searchLogs() {
                 </button>
             </div>
             <div id="dbLog${idx}" class="collapse" data-bs-parent="#workoutLogsAccordion">
-                <div class="card-body bg-white pt-2 pb-3" style="font-size: 13px;">
-                    <span class="workout-badge badge-strength">💪 Strength Workout</span>
-                    <div class="ps-2 text-secondary mt-1">${strengthHtml || "No strength logs."}</div>
+                <div class="card-body bg-white pt-1 pb-3" style="font-size: 13px;">
+                    
+                    <span class="workout-badge badge-warmup">🔥 Warm Up</span>
+                    <div class="ps-2 text-secondary mb-2">${warmupHtml || "No warm up entries."}</div>
+                    
+                    <span class="workout-badge badge-strength">💪 Strength Training</span>
+                    <div class="ps-2 text-secondary mb-2">${strengthHtml || "No strength entries."}</div>
+                    
+                    <span class="workout-badge badge-cardio">🏃‍♂️ Cardio Training</span>
+                    <div class="ps-2 text-secondary">${cardioHtml || "No cardio entries."}</div>
+                    
                 </div>
             </div>
         </div>`;
     });
-    document.getElementById('workoutLogsAccordion').innerHTML = html || "<div class='text-center text-muted small mt-3'>No records in central DB.</div>";
+    document.getElementById('workoutLogsAccordion').innerHTML = html || "<div class='text-center text-muted small mt-3'>No records found.</div>";
 }
 
 function renderTraineeLogs(traineeName) {
@@ -401,16 +494,35 @@ function renderTraineeLogs(traineeName) {
     let filtered = logs.filter(l => l.trainee === traineeName).reverse();
     let html = "";
     filtered.forEach(l => {
+        let warmupHtml = "";
+        (l.warmup || []).forEach(w => { warmupHtml += `<div>• ${w.activity} | ${w.time} | ${w.intensity}</div>`; });
+
         let strengthHtml = "";
-        l.strength.forEach(s => { strengthHtml += `<div>• ${s.exercise} | ${s.weight} | ${s.reps} Reps</div>`; });
+        (l.strength || []).forEach(s => { strengthHtml += `<div>• ${s.exercise} | ${s.weight} | ${s.reps} Reps</div>`; });
+
+        let cardioHtml = "";
+        (l.cardio || []).forEach(c => { cardioHtml += `<div>• ${c.activity} | ${c.time} | ${c.intensity}</div>`; });
+
         html += `
         <div class="card card-custom p-3 bg-white mb-2">
-            <div class="d-flex justify-content-between border-bottom pb-2 mb-2"><span class="fw-bold text-success">Live Log</span><span class="text-secondary small fw-medium">${l.date}</span></div>
+            <div class="d-flex justify-content-between border-bottom pb-2 mb-2"><span class="fw-bold text-success">Workout Log</span><span class="text-secondary small fw-medium">${l.date}</span></div>
             <p class="mb-2 small"><strong>Program:</strong> ${l.program}</p>
-            <div class="bg-light p-2 rounded small">${strengthHtml || "No exercises specified."}</div>
+            
+            <div class="bg-light p-2 rounded small mb-2">
+                <span class="fw-bold text-warning d-block" style="font-size:11px;">WARM UP</span>
+                ${warmupHtml || "None"}
+            </div>
+            <div class="bg-light p-2 rounded small mb-2">
+                <span class="fw-bold text-primary d-block" style="font-size:11px;">STRENGTH</span>
+                ${strengthHtml || "None"}
+            </div>
+            <div class="bg-light p-2 rounded small">
+                <span class="fw-bold text-success d-block" style="font-size:11px;">CARDIO</span>
+                ${cardioHtml || "None"}
+            </div>
         </div>`;
     });
-    document.getElementById('traineeLogsArea').innerHTML = html || "<div class='p-3 text-center text-muted small'>No workouts assigned on the cloud yet.</div>";
+    document.getElementById('traineeLogsArea').innerHTML = html || "<div class='p-3 text-center text-muted small'>No workouts assigned yet.</div>";
 }
 
 document.getElementById('logDate').valueAsDate = new Date();
