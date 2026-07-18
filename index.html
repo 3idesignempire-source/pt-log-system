@@ -1,803 +1,184 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Log System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>கிட்ஸ் பேரடைஸ் பிளே ஸ்கூல் | Kids Paradise</title>
     <style>
-        body { background-color: #f4f6f9; font-family: -apple-system, sans-serif; }
-        .card-custom { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: none; }
-        .app-screen { display: none; } 
-        .active-screen { display: block; } 
-        
-        /* Fixed Header Layout */
-        .dashboard-header {
+        /* பேஸிக் ஸ்டைல்ஸ் */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* ஹெட்டர் & நேவிகேஷன் */
+        header {
+            background-color: #ffffff;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #ffffff;
-            padding: 12px 16px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .header-title-section { flex: 1; padding-right: 8px; }
-        .header-btn-group { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
-        .btn-header-action { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 8px; white-space: nowrap; }
 
-        /* Mouse Click Fix Button Layout */
-        .btn-stacked-action {
-            width: 100%;
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF5722; /* துடிப்பான ஆரஞ்சு நிறம் */
+        }
+
+        .logo span {
+            color: #4CAF50; /* பச்சை நிறம் */
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #555;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #FF5722;
+        }
+
+        .btn-admission {
+            background-color: #FFC107; /* மஞ்சள் நிறம் */
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* ஹீரோ செக்ஷன் (முக்கிய பகுதி) */
+        .hero {
+            background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+            padding: 80px 5%;
+            text-align: center;
             display: flex;
-            flex-direction: column; 
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 16px;
-            font-weight: 700;
-            font-size: 16px;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.07);
-            border: none;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #555;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .cta-btn {
+            background-color: #FF5722;
+            color: white;
+            padding: 15px 35px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* சிறப்பம்சங்கள் (Features Section) */
+        .features {
+            padding: 60px 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1-fr));
+            gap: 30px;
+            background-color: #fff;
+        }
+
+        .feature-card {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-1 { border-top: 5px solid #FF5722; background-color: #FFF3E0; }
+        .card-2 { border-top: 5px solid #4CAF50; background-color: #E8F5E9; }
+        .card-3 { border-top: 5px solid #2196F3; background-color: #E3F2FD; }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* புட்டர் (Footer) */
+        footer {
+            background-color: #2c3e50;
             color: white;
             text-align: center;
-            cursor: pointer;
+            padding: 20px;
+            font-size: 14px;
         }
-        .btn-stacked-action:hover { opacity: 0.95; }
-
-        /* 3D Glass Box Icons */
-        .icon-3d-box {
-            background: rgba(255, 255, 255, 0.22);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.45);
-            padding: 10px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px; 
-            box-shadow: inset 0 3px 6px rgba(255,255,255,0.4), inset 0 -3px 6px rgba(0,0,0,0.1), 0 6px 12px rgba(0,0,0,0.15);
-            width: 56px;
-            height: 56px;
-            flex-shrink: 0;
-            pointer-events: none;
-        }
-
-        .icon-3d-text {
-            font-size: 30px;
-            filter: drop-shadow(0px 5px 8px rgba(0,0,0,0.35)) drop-shadow(0px 1px 2px rgba(0,0,0,0.25)) saturate(1.4); 
-            pointer-events: none;
-        }
-
-        .btn-label-centered { letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.15); pointer-events: none; }
-        
-        /* Logsheet Sections Styling */
-        .section-header-orange { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
-        .section-header-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
-        .section-header-green { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
-        
-        .log-row-container { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
-        .log-row { margin-bottom: 6px; }
-        .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
-        
-        .accordion-button-custom {
-            background-color: #ffffff; color: #1e293b; font-weight: 600; border-radius: 10px !important; border: 1px solid #e2e8f0;
-        }
-        .accordion-button-custom:not(.collapsed) { background-color: #f8fafc; color: #2563eb; border-bottom: 1px dashed #cbd5e1; box-shadow: none; }
-        
-        .workout-badge { font-size: 11px; padding: 3px 6px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 4px; margin-bottom: 2px; }
-        .badge-warmup { background-color: #fff7ed; color: #c2410c; }
-        .badge-strength { background-color: #eff6ff; color: #1d4ed8; }
-        .badge-cardio { background-color: #ecfdf5; color: #047857; }
-        
-        .copyright-text { font-size: 11px; color: #94a3b8; margin-top: 30px; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
 
-<div class="container my-4" style="max-width: 600px;">
+    <header>
+        <div class="logo">Kids<span>Paradise</span></div>
+        <nav>
+            <a href="#">முகப்பு</a>
+            <a href="#">எங்களைப் பற்றி</a>
+            <a href="#">வகுப்புகள்</a>
+            <a href="#">தொடர்புக்கு</a>
+            <a href="#" class="btn-admission">அட்மிஷன் 2026</a>
+        </nav>
+    </header>
 
-    <div id="loginScreen" class="app-screen active-screen">
-        <div class="card card-custom p-4 bg-white text-center">
-            <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
-            <p class="text-muted small mb-4">Track workouts, achieve goals.</p>
-            
-            <form onsubmit="handleLogin(event)">
-                <div class="mb-3 text-start">
-                    <label class="form-label small fw-semibold text-secondary">USERNAME</label>
-                    <input type="text" id="username" class="form-control" placeholder="Enter username (e.g., prasaath)" required>
-                </div>
-                <div class="mb-4 text-start">
-                    <label class="form-label small fw-semibold text-secondary">PASSWORD</label>
-                    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">LOGIN</button>
-            </form>
-            <div class="copyright-text">&copy; 2026 <span class="fw-bold text-secondary">3i design empire.com</span>.</div>
+    <section class="hero">
+        <h1>உங்கள் குழந்தையின் பிரகாசமான எதிர்காலத்திற்கான முதல் படி!</h1>
+        <p>அன்பான சூழலில், விளையாட்டு வழிக் கல்வி மூலம் குழந்தைகளின் தனித்திறமைகளை கண்டறிந்து வளர்க்கிறோம்.</p>
+        <a href="#" class="cta-btn">இப்போதே பதிவு செய்யுங்க!</a>
+    </section>
+
+    <section class="features">
+        <div class="feature-card card-1">
+            <h3>🎨 விளையாட்டு வழிக் கல்வி</h3>
+            <p>குழந்தைகள் சலிப்பில்லாமல் ஜாலியாக கற்கும் வகையில் பிரத்யேக பாடத்திட்டங்கள்.</p>
         </div>
-    </div>
-
-    <div id="trainerDashboard" class="app-screen">
-        <div class="dashboard-header">
-            <div class="header-title-section">
-                <h6 class="fw-bold mb-0 text-dark" id="trainerWelcome">👋 Welcome Trainer</h6>
-                <small class="text-muted" style="font-size: 11px;">Gym Management</small>
-            </div>
-            <div class="header-btn-group">
-                <button class="btn btn-header-action btn-outline-primary" onclick="openChangePasswordModal('trainer')">Pass 🔑</button>
-                <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
-            </div>
+        <div class="feature-card card-2">
+            <h3>🛡️ பாதுகாப்பான சூழல்</h3>
+            <p>CCTV கண்காணிப்பு மற்றும் கனிவான ஆசிரியர்களுடன் கூடிய 100% பாதுகாப்பான இடம்.</p>
         </div>
-        
-        <div class="d-flex flex-column gap-2 mb-4">
-            <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);" onclick="showScreen('manageTraineesScreen')">
-                <div class="icon-3d-box"><span class="icon-3d-text">👥</span></div>
-                <span class="btn-label-centered">Register / Manage Trainee</span>
-            </button>
-
-            <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #ea580c, #c2410c);" onclick="showScreen('configureActivitiesScreen')">
-                <div class="icon-3d-box"><span class="icon-3d-text">⚙️</span></div>
-                <span class="btn-label-centered">Configure Master Activities</span>
-            </button>
-            
-            <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #22c55e, #15803d);" onclick="openAddLogBlank()">
-                <div class="icon-3d-box"><span class="icon-3d-text">📝</span></div>
-                <span class="btn-label-centered">Add Workout Log</span>
-            </button>
-            
-            <div class="mt-4 pt-2">
-                <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #475569, #0f172a);" onclick="showScreen('viewLogsScreen')">
-                    <div class="icon-3d-box"><span class="icon-3d-text">🔍</span></div>
-                    <span class="btn-label-centered">View, Edit & Delete Logs</span>
-                </button>
-            </div>
+        <div class="feature-card card-3">
+            <h3>🚀 திறமை மேம்பாடு</h3>
+            <p>வரைதல், நடனம், யோகா மற்றும் பேச்சுத்திறனை வளர்க்கும் சிறப்பு வகுப்புகள்.</p>
         </div>
-    </div>
-
-    <div id="manageTraineesScreen" class="app-screen">
-        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-            <h5 class="fw-bold mb-0">👥 Manage Trainees</h5>
-            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
-        </div>
-
-        <div class="card card-custom p-3 bg-white mb-3">
-            <h6 class="fw-bold text-primary mb-3">Register New Trainee</h6>
-            <form onsubmit="saveTrainee(event)">
-                <div class="mb-2"><input type="text" id="tName" class="form-control form-control-sm" placeholder="Full Name" required></div>
-                <div class="mb-2"><input type="text" id="tUser" class="form-control form-control-sm" placeholder="Username (For Client Login)" required></div>
-                <div class="mb-2"><input type="password" id="tPass" class="form-control form-control-sm" placeholder="Password" required></div>
-                <div class="mb-3"><input type="tel" id="tPhone" class="form-control form-control-sm" placeholder="Phone Number"></div>
-                <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">SAVE TRAINEE</button>
-            </form>
-        </div>
-
-        <div class="card card-custom p-3 bg-white">
-            <h6 class="fw-bold mb-2 text-secondary">Active Trainees List</h6>
-            <div class="table-responsive">
-                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 14px;">
-                    <thead><tr><th>Name</th><th>Username</th><th class="text-end">Actions</th></tr></thead>
-                    <tbody id="traineeTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div id="configureActivitiesScreen" class="app-screen">
-        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-            <h5 class="fw-bold mb-0">⚙️ Master Activities Setup</h5>
-            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
-        </div>
-
-        <div class="card card-custom p-3 bg-white mb-3">
-            <h6 class="fw-bold text-orange mb-3" style="color:#ea580c;">Add Global Exercise / Activity</h6>
-            <form onsubmit="saveGlobalActivity(event)">
-                <div class="mb-2">
-                    <label class="small fw-semibold text-secondary">WORKOUT CATEGORY</label>
-                    <select id="actCategory" class="form-select form-select-sm" required>
-                        <option value="warmup">WARM UP</option>
-                        <option value="strength">STRENGTH TRAINING</option>
-                        <option value="cardio">CARDIO TRAINING</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="small fw-semibold text-secondary">ACTIVITY / EXERCISE NAME</label>
-                    <input type="text" id="actName" class="form-control form-control-sm" placeholder="e.g., Lat Pulldown, Crossfit" required>
-                </div>
-                <button type="submit" class="btn btn-sm btn-warning w-100 fw-bold text-white" style="background-color:#ea580c; border:none;">ADD TO MASTER LIST</button>
-            </form>
-        </div>
-
-        <div class="card card-custom p-3 bg-white">
-            <h6 class="fw-bold mb-2 text-secondary">Configured Exercise Catalog</h6>
-            <div class="table-responsive">
-                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 13px;">
-                    <thead><tr><th>Category</th><th>Exercise / Activity</th><th class="text-end">Action</th></tr></thead>
-                    <tbody id="activityCatalogTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div id="addLogScreen" class="app-screen">
-        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-            <h5 class="fw-bold mb-0" id="logScreenTitle">📝 Add Workout Log</h5>
-            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
-        </div>
-
-        <div class="card card-custom p-3 bg-white">
-            <form onsubmit="saveWorkoutLog(event)">
-                <input type="hidden" id="editLogIndex" value="-1">
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold text-secondary small">SELECT ACTIVE TRAINEE</label>
-                    <select class="form-select" id="logTraineeSelect" required><option value="">-- Choose Trainee --</option></select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold text-secondary small">DATE</label>
-                    <input type="date" id="logDate" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold text-secondary small">WORKOUT PROGRAM FOR THE DAY</label>
-                    <textarea id="logProgram" class="form-control" rows="2" placeholder="e.g., Full Body Sync" required></textarea>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center section-header-orange mb-2">
-                    <span>WARM UP (Activity | Time | Intensity)</span>
-                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addWarmupRow()">+ Add</button>
-                </div>
-                <div id="warmupSection" class="mb-3"></div>
-
-                <div class="d-flex justify-content-between align-items-center section-header-blue mb-2">
-                    <span>STRENGTH TRAINING (Exercise | Weight | Reps)</span>
-                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addStrengthRow()">+ Add</button>
-                </div>
-                <div id="strengthSection" class="mb-3"></div>
-
-                <div class="d-flex justify-content-between align-items-center section-header-green mb-2">
-                    <span>CARDIO TRAINING (Activity | Time | Intensity)</span>
-                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addCardioRow()">+ Add</button>
-                </div>
-                <div id="cardioSection" class="mb-3"></div>
-
-                <button type="submit" class="btn btn-success w-100 fw-bold mt-4 py-2" id="logSubmitBtn">SUBMIT WORKOUT LOG</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="viewLogsScreen" class="app-screen">
-        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-            <h5 class="fw-bold mb-0 text-dark">🔍 Search & Manage Logs</h5>
-            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
-        </div>
-
-        <div class="card card-custom p-3 bg-white mb-3">
-            <div class="row g-2">
-                <div class="col-12">
-                    <select class="form-select form-select-sm" id="searchTraineeSelect"><option value="">All Trainees</option></select>
-                </div>
-                <div class="col-12"><button class="btn btn-sm btn-primary w-100 fw-bold" onclick="searchLogs()">SEARCH LOGS</button></div>
-            </div>
-        </div>
-
-        <h6 class="fw-semibold text-secondary mb-2 small px-1">WORKOUT HISTORY RESULT</h6>
-        <div class="accordion" id="workoutLogsAccordion"></div>
-    </div>
-
-    <div id="traineeDashboard" class="app-screen">
-        <div class="dashboard-header">
-            <div class="header-title-section">
-                <h6 class="fw-bold mb-0 text-dark" id="clientWelcome">👋 Welcome</h6>
-                <small class="text-muted" style="font-size: 11px;">Your Personal Workout Track</small>
-            </div>
-            <div class="header-btn-group">
-                <button class="btn btn-header-action btn-outline-primary" id="clientPassBtn">Pass 🔑</button>
-                <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
-            </div>
-        </div>
-        <div id="traineeLogsArea"></div>
-    </div>
-
-</div>
-
-<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
-    <div class="modal-content" style="border-radius:12px;">
-      <div class="modal-header py-2 px-3">
-        <h6 class="modal-title fw-bold">🔑 Change Password</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="passModalUserType">
-        <div class="mb-2">
-            <label class="small fw-semibold text-secondary mb-1">NEW PASSWORD</label>
-            <input type="password" id="newPasswordInput" class="form-control form-control-sm" placeholder="Enter new password" required>
-        </div>
-        <button type="button" class="btn btn-sm btn-primary w-100 fw-bold mt-2" onclick="processPasswordChange()">UPDATE PASSWORD</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-const defaultActivities = [
-    { category: 'warmup', name: 'Treadmill Walk' },
-    { category: 'warmup', name: 'Stretching Routine' },
-    { category: 'warmup', name: 'Jumping Jacks' },
-    { category: 'strength', name: 'Squats' },
-    { category: 'strength', name: 'Bench Press' },
-    { category: 'strength', name: 'Deadlift' },
-    { category: 'strength', name: 'Bicep Curls' },
-    { category: 'cardio', name: 'Cycling' },
-    { category: 'cardio', name: 'Rowing Machine' },
-    { category: 'cardio', name: 'Elliptical Cross' }
-];
-
-if(!localStorage.getItem('trainees')) localStorage.setItem('trainees', JSON.stringify([]));
-if(!localStorage.getItem('workoutLogs')) localStorage.setItem('workoutLogs', JSON.stringify([]));
-if(!localStorage.getItem('masterActivities')) localStorage.setItem('masterActivities', JSON.stringify(defaultActivities));
-if(!localStorage.getItem('trainerPassword')) localStorage.setItem('trainerPassword', 'trainer123');
-
-let currentLoggedInClientUsername = ""; 
-
-function getDB(key) { return JSON.parse(localStorage.getItem(key)); }
-function saveDB(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
-
-function showScreen(screenId) {
-    const screens = document.querySelectorAll('.app-screen');
-    screens.forEach(screen => screen.classList.remove('active-screen'));
-    document.getElementById(screenId).classList.add('active-screen');
-    window.scrollTo(0, 0);
-    
-    if(screenId === 'manageTraineesScreen') renderTrainees();
-    if(screenId === 'configureActivitiesScreen') renderActivityCatalog();
-    if(screenId === 'addLogScreen' || screenId === 'viewLogsScreen') populateTraineeDropdowns();
-}
-
-// BINDING BUG SUCCESSFULLY FIXED HERE
-function handleLogin(event) {
-    event.preventDefault();
-    const rawUser = document.getElementById('username').value.trim();
-    const user = rawUser.toLowerCase();
-    
-    // FIXED: Correctly capturing the password value from the form input field
-    const pass = document.getElementById('password').value; 
-    
-    if (user === 'trainer' || user === 'pt' || user === 'prasaath') {
-        let savedTrainerPass = localStorage.getItem('trainerPassword') || 'trainer123';
-        if (pass === savedTrainerPass) {
-            document.getElementById('trainerWelcome').innerText = "👋 Welcome, " + rawUser;
-            showScreen('trainerDashboard');
-        } else {
-            alert("Invalid Trainer Password!");
-        }
-    } else {
-        let trainees = getDB('trainees');
-        let found = trainees.find(t => t.username.toLowerCase() === user && t.password === pass);
-        if(found) {
-            currentLoggedInClientUsername = found.username;
-            document.getElementById('clientWelcome').innerText = "👋 Welcome, " + found.name;
-            document.getElementById('clientPassBtn').setAttribute('onclick', `openChangePasswordModal('client', '${found.username}')`);
-            showScreen('traineeDashboard');
-            renderTraineeLogs(found.name);
-        } else {
-            alert("Invalid Username or Password!");
-        }
-    }
-}
-
-function logout() {
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    currentLoggedInClientUsername = "";
-    showScreen('loginScreen');
-}
-
-// CHANGE PASSWORD POPUP LOGIC
-let targetClientUser = "";
-function openChangePasswordModal(type, clientUser = "") {
-    document.getElementById('passModalUserType').value = type;
-    document.getElementById('newPasswordInput').value = "";
-    targetClientUser = clientUser;
-    let myModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
-    myModal.show();
-}
-
-function processPasswordChange() {
-    let type = document.getElementById('passModalUserType').value;
-    let newPass = document.getElementById('newPasswordInput').value.trim();
-    if(!newPass) { alert("Please enter a valid password!"); return; }
-
-    if(type === 'trainer') {
-        localStorage.setItem('trainerPassword', newPass);
-        alert("Trainer password updated successfully!");
-    } else {
-        let trainees = getDB('trainees');
-        let idx = trainees.findIndex(t => t.username.toLowerCase() === targetClientUser.toLowerCase());
-        if(idx !== -1) {
-            trainees[idx].password = newPass;
-            saveDB('trainees', trainees);
-            alert("Client password updated successfully!");
-        }
-    }
-    bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
-}
-
-// REGISTER TRAINEES
-function saveTrainee(e) {
-    e.preventDefault();
-    let trainees = getDB('trainees');
-    let newTrainee = {
-        name: document.getElementById('tName').value,
-        username: document.getElementById('tUser').value.trim(),
-        password: document.getElementById('tPass').value,
-        phone: document.getElementById('tPhone').value
-    };
-    trainees.push(newTrainee);
-    saveDB('trainees', trainees);
-    alert('Trainee Registered Successfully!');
-    e.target.reset();
-    renderTrainees();
-}
-
-function renderTrainees() {
-    let trainees = getDB('trainees');
-    let html = "";
-    trainees.forEach((t, index) => {
-        html += `<tr><td>${t.name}</td><td>${t.username}</td><td class="text-end"><button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size:12px;" onclick="deleteTrainee(${index})">Del</button></td></tr>`;
-    });
-    document.getElementById('traineeTableBody').innerHTML = html || "<tr><td colspan='3' class='text-center text-muted'>No trainees found.</td></tr>";
-}
-
-function deleteTrainee(index) {
-    if(confirm("Delete this Trainee?")) {
-        let trainees = getDB('trainees');
-        trainees.splice(index, 1);
-        saveDB('trainees', trainees);
-        renderTrainees();
-    }
-}
-
-// CATALOG SETUP BUSINESS LOGIC
-function saveGlobalActivity(e) {
-    e.preventDefault();
-    let master = getDB('masterActivities');
-    let newAct = {
-        category: document.getElementById('actCategory').value,
-        name: document.getElementById('actName').value.trim()
-    };
-    master.push(newAct);
-    saveDB('masterActivities', master);
-    alert('Activity added to global catalog list!');
-    e.target.reset();
-    renderActivityCatalog();
-}
-
-function renderActivityCatalog() {
-    let master = getDB('masterActivities');
-    let html = "";
-    master.forEach((a, index) => {
-        html += `<tr><td><span class="badge bg-secondary">${a.category.toUpperCase()}</span></td><td><strong>${a.name}</strong></td><td class="text-end"><button class="btn btn-xs btn-danger py-0 px-2 rounded" style="font-size:11px;" onclick="deleteGlobalActivity(${index})">X</button></td></tr>`;
-    });
-    document.getElementById('activityCatalogTableBody').innerHTML = html || "<tr><td colspan='3' class='text-center text-muted'>Catalog empty.</td></tr>";
-}
-
-function deleteGlobalActivity(index) {
-    if(confirm("Remove from standard list?")) {
-        let master = getDB('masterActivities');
-        master.splice(index, 1);
-        saveDB('masterActivities', master);
-        renderActivityCatalog();
-    }
-}
-
-function populateTraineeDropdowns() {
-    let trainees = getDB('trainees');
-    let selectOptions = '<option value="">-- Choose Trainee --</option>';
-    let searchOptions = '<option value="">All Trainees</option>';
-    trainees.forEach(t => {
-        selectOptions += `<option value="${t.name}">${t.name}</option>`;
-        searchOptions += `<option value="${t.name}">${t.name}</option>`;
-    });
-    if(document.getElementById('logTraineeSelect')) document.getElementById('logTraineeSelect').innerHTML = selectOptions;
-    if(document.getElementById('searchTraineeSelect')) document.getElementById('searchTraineeSelect').innerHTML = searchOptions;
-}
-
-function getCategoryDropdownOptions(category) {
-    let master = getDB('masterActivities');
-    let filtered = master.filter(a => a.category === category);
-    let options = '<option value="">-- Select --</option>';
-    filtered.forEach(a => {
-        options += `<option value="${a.name}">${a.name}</option>`;
-    });
-    return options;
-}
-
-function openAddLogBlank() {
-    document.getElementById('editLogIndex').value = "-1";
-    document.getElementById('logScreenTitle').innerText = "📝 Add Workout Log";
-    document.getElementById('logSubmitBtn').innerText = "SUBMIT WORKOUT LOG";
-    document.getElementById('warmupSection').innerHTML = "";
-    document.getElementById('strengthSection').innerHTML = "";
-    document.getElementById('cardioSection').innerHTML = "";
-    if(document.getElementById('logTraineeSelect')) document.getElementById('logTraineeSelect').value = "";
-    document.getElementById('logProgram').value = "";
-    document.getElementById('logDate').valueAsDate = new Date();
-    showScreen('addLogScreen');
-}
-
-function addWarmupRow(valAct = "", valTime = "", valInt = "", valNotes = "") {
-    const section = document.getElementById('warmupSection');
-    const container = document.createElement('div');
-    container.className = 'log-row-container';
-    let dropdownHtml = getCategoryDropdownOptions('warmup');
-    
-    container.innerHTML = `
-        <div class="row g-1 log-row align-items-center">
-            <div class="col-4"><select class="form-select form-select-sm act-input" required>${dropdownHtml}</select></div>
-            <div class="col-4"><input type="text" class="form-control form-control-sm time-input" placeholder="Time (mins)"></div>
-            <div class="col-3"><input type="text" class="form-control form-control-sm int-input" placeholder="Intensity"></div>
-            <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
-        </div>
-        <div class="row mt-1">
-            <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Add specific notes/instructions for this warm-up here..."></textarea></div>
-        </div>
-    `;
-    section.appendChild(container);
-    if(valAct) container.querySelector('.act-input').value = valAct;
-    if(valTime) container.querySelector('.time-input').value = valTime;
-    if(valInt) container.querySelector('.int-input').value = valInt;
-    if(valNotes) container.querySelector('.notes-input').value = valNotes;
-}
-
-function addStrengthRow(valAct = "", valWt = "", valReps = "", valNotes = "") {
-    const section = document.getElementById('strengthSection');
-    const container = document.createElement('div');
-    container.className = 'log-row-container';
-    let dropdownHtml = getCategoryDropdownOptions('strength');
-    
-    container.innerHTML = `
-        <div class="row g-1 log-row align-items-center">
-            <div class="col-4"><select class="form-select form-select-sm act-input" required>${dropdownHtml}</select></div>
-            <div class="col-4"><input type="text" class="form-control form-control-sm wt-input" placeholder="Weight (kg)"></div>
-            <div class="col-3"><input type="text" class="form-control form-control-sm rep-input" placeholder="Reps"></div>
-            <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
-        </div>
-        <div class="row mt-1">
-            <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Add specific strength targets or notes here..."></textarea></div>
-        </div>
-    `;
-    section.appendChild(container);
-    if(valAct) container.querySelector('.act-input').value = valAct;
-    if(valWt) container.querySelector('.wt-input').value = valWt;
-    if(valReps) container.querySelector('.rep-input').value = valReps;
-    if(valNotes) container.querySelector('.notes-input').value = valNotes;
-}
-
-function addCardioRow(valAct = "", valTime = "", valInt = "", valNotes = "") {
-    const section = document.getElementById('cardioSection');
-    const container = document.createElement('div');
-    container.className = 'log-row-container';
-    let dropdownHtml = getCategoryDropdownOptions('cardio');
-    
-    container.innerHTML = `
-        <div class="row g-1 log-row align-items-center">
-            <div class="col-4"><select class="form-select form-select-sm act-input" required>${dropdownHtml}</select></div>
-            <div class="col-4"><input type="text" class="form-control form-control-sm time-input" placeholder="Time"></div>
-            <div class="col-3"><input type="text" class="form-control form-control-sm int-input" placeholder="Intensity"></div>
-            <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
-        </div>
-        <div class="row mt-1">
-            <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Add speed, pace info or notes here..."></textarea></div>
-        </div>
-    `;
-    section.appendChild(container);
-    if(valAct) container.querySelector('.act-input').value = valAct;
-    if(valTime) container.querySelector('.time-input').value = valTime;
-    if(valInt) container.querySelector('.int-input').value = valInt;
-    if(valNotes) container.querySelector('.notes-input').value = valNotes;
-}
-
-function saveWorkoutLog(e) {
-    e.preventDefault();
-    let logs = getDB('workoutLogs');
-    let editIndex = parseInt(document.getElementById('editLogIndex').value);
-    
-    let warmupRows = document.querySelectorAll('#warmupSection .log-row-container');
-    let warmupData = [];
-    warmupRows.forEach(row => {
-        warmupData.push({
-            activity: row.querySelector('.act-input').value,
-            time: row.querySelector('.time-input').value,
-            intensity: row.querySelector('.int-input').value,
-            notes: row.querySelector('.notes-input').value
-        });
-    });
-
-    let strengthRows = document.querySelectorAll('#strengthSection .log-row-container');
-    let strengthData = [];
-    strengthRows.forEach(row => {
-        strengthData.push({
-            exercise: row.querySelector('.act-input').value,
-            weight: row.querySelector('.wt-input').value,
-            reps: row.querySelector('.rep-input').value,
-            notes: row.querySelector('.notes-input').value
-        });
-    });
-
-    let cardioRows = document.querySelectorAll('#cardioSection .log-row-container');
-    let cardioData = [];
-    cardioRows.forEach(row => {
-        cardioData.push({
-            activity: row.querySelector('.act-input').value,
-            time: row.querySelector('.time-input').value,
-            intensity: row.querySelector('.int-input').value,
-            notes: row.querySelector('.notes-input').value
-        });
-    });
-
-    let logObj = {
-        trainee: document.getElementById('logTraineeSelect').value,
-        date: document.getElementById('logDate').value,
-        program: document.getElementById('logProgram').value,
-        warmup: warmupData,
-        strength: strengthData,
-        cardio: cardioData
-    };
-
-    if(editIndex === -1) {
-        logs.push(logObj);
-        alert('Workout Log Added Successfully!');
-    } else {
-        logs[editIndex] = logObj;
-        alert('Workout Log Updated Successfully!');
-    }
-    
-    saveDB('workoutLogs', logs);
-    e.target.reset();
-    openAddLogBlank();
-    showScreen('trainerDashboard');
-}
-
-function triggerEditLog(index) {
-    let logs = getDB('workoutLogs');
-    let log = logs[index];
-    if(!log) return;
-
-    showScreen('addLogScreen');
-    populateTraineeDropdowns();
-
-    document.getElementById('editLogIndex').value = index;
-    document.getElementById('logScreenTitle').innerText = "✏️ Edit Workout Log";
-    document.getElementById('logSubmitBtn').innerText = "UPDATE WORKOUT LOG";
-
-    document.getElementById('logTraineeSelect').value = log.trainee;
-    document.getElementById('logDate').value = log.date;
-    document.getElementById('logProgram').value = log.program;
-
-    document.getElementById('warmupSection').innerHTML = "";
-    (log.warmup || []).forEach(w => addWarmupRow(w.activity, w.time, w.intensity, w.notes));
-
-    document.getElementById('strengthSection').innerHTML = "";
-    (log.strength || []).forEach(s => addStrengthRow(s.exercise, s.weight, s.reps, s.notes));
-
-    document.getElementById('cardioSection').innerHTML = "";
-    (log.cardio || []).forEach(c => addCardioRow(c.activity, c.time, c.intensity, c.notes));
-}
-
-function triggerDeleteLog(index) {
-    if(confirm("Are you sure you want to permanently delete this workout log?")) {
-        let logs = getDB('workoutLogs');
-        logs.splice(index, 1);
-        saveDB('workoutLogs', logs);
-        alert("Workout record successfully deleted.");
-        searchLogs(); 
-    }
-}
-
-function searchLogs() {
-    let targetTrainee = document.getElementById('searchTraineeSelect').value;
-    let logs = getDB('workoutLogs');
-    
-    let html = "";
-    for(let i = logs.length - 1; i >= 0; i--) {
-        let l = logs[i];
-        if(targetTrainee && l.trainee !== targetTrainee) continue;
-
-        let warmupHtml = "";
-        (l.warmup || []).forEach(w => { 
-            warmupHtml += `<div class="mb-1">• <strong>${w.activity}</strong> | Time: ${w.time} | Int: ${w.intensity} ${w.notes ? `<div class="text-dark bg-light p-1 rounded border-start border-warning small mt-1">📌 ${w.notes}</div>` : ''}</div>`; 
-        });
-
-        let strengthHtml = "";
-        (l.strength || []).forEach(s => { 
-            strengthHtml += `<div class="mb-1">• <strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="text-dark bg-light p-1 rounded border-start border-primary small mt-1">📌 ${s.notes}</div>` : ''}</div>`; 
-        });
-
-        let cardioHtml = "";
-        (l.cardio || []).forEach(c => { 
-            cardioHtml += `<div class="mb-1">• <strong>${c.activity}</strong> | Time: ${c.time} | Int: ${c.intensity} ${c.notes ? `<div class="text-dark bg-light p-1 rounded border-start border-success small mt-1">📌 ${c.notes}</div>` : ''}</div>`; 
-        });
-
-        html += `
-        <div class="card card-custom mb-2 overflow-hidden border">
-            <div class="card-header p-0 border-0 bg-white">
-                <button class="btn w-100 text-start p-3 d-flex justify-content-between align-items-center accordion-button-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dbLog${i}">
-                    <div><span class="d-block fw-bold text-dark">${l.trainee}</span><span class="text-muted small fw-normal">🎯 Program: ${l.program}</span></div>
-                    <span class="badge bg-secondary rounded-pill small">${l.date}</span>
-                </button>
-            </div>
-            <div id="dbLog${i}" class="collapse" data-bs-parent="#workoutLogsAccordion">
-                <div class="card-body bg-white pt-1 pb-3" style="font-size: 13px;">
-                    
-                    <span class="workout-badge badge-warmup">🔥 Warm Up</span>
-                    <div class="ps-2 text-secondary mb-2">${warmupHtml || "No warm up entries."}</div>
-                    
-                    <span class="workout-badge badge-strength">💪 Strength Training</span>
-                    <div class="ps-2 text-secondary mb-2">${strengthHtml || "No strength entries."}</div>
-                    
-                    <span class="workout-badge badge-cardio">🏃‍♂️ Cardio Training</span>
-                    <div class="ps-2 text-secondary mb-3">${cardioHtml || "No cardio entries."}</div>
-                    
-                    <div class="border-top pt-2 d-flex gap-2">
-                        <button class="btn btn-sm btn-outline-primary px-3 fw-bold" onclick="triggerEditLog(${i})">✏️ Edit</button>
-                        <button class="btn btn-sm btn-outline-danger px-3 fw-bold" onclick="triggerDeleteLog(${i})">🗑️ Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-    }
-    document.getElementById('workoutLogsAccordion').innerHTML = html || "<div class='text-center text-muted small mt-3'>No records found.</div>";
-}
-
-function renderTraineeLogs(traineeName) {
-    let logs = getDB('workoutLogs');
-    let html = "";
-    for(let i = logs.length - 1; i >= 0; i--) {
-        let l = logs[i];
-        if(l.trainee !== traineeName) continue;
-
-        let warmupHtml = "";
-        (l.warmup || []).forEach(w => { 
-            warmupHtml += `<div>• <strong>${w.activity}</strong> | ${w.time} | ${w.intensity} ${w.notes ? `<div class="text-dark bg-white border p-1 rounded my-1" style="font-size:12px;">📌 ${w.notes}</div>` : ''}</div>`; 
-        });
-
-        let strengthHtml = "";
-        (l.strength || []).forEach(s => { 
-            strengthHtml += `<div>• <strong>${s.exercise}</strong> | ${s.weight} | ${s.reps} Reps ${s.notes ? `<div class="text-dark bg-white border p-1 rounded my-1" style="font-size:12px;">📌 ${s.notes}</div>` : ''}</div>`; 
-        });
-
-        let cardioHtml = "";
-        (l.cardio || []).forEach(c => { 
-            cardioHtml += `<div>• <strong>${c.activity}</strong> | ${c.time} | ${c.intensity} ${c.notes ? `<div class="text-dark bg-white border p-1 rounded my-1" style="font-size:12px;">📌 ${c.notes}</div>` : ''}</div>`; 
-        });
-
-        html += `
-        <div class="card card-custom p-3 bg-white mb-2">
-            <div class="d-flex justify-content-between border-bottom pb-2 mb-2"><span class="fw-bold text-success">Workout Log</span><span class="text-secondary small fw-medium">${l.date}</span></div>
-            <p class="mb-2 small"><strong>Program:</strong> ${l.program}</p>
-            
-            <div class="bg-light p-2 rounded small mb-2">
-                <span class="fw-bold text-warning d-block" style="font-size:11px;">WARM UP</span>
-                ${warmupHtml || "None"}
-            </div>
-            <div class="bg-light p-2 rounded small mb-2">
-                <span class="fw-bold text-primary d-block" style="font-size:11px;">STRENGTH</span>
-                ${strengthHtml || "None"}
-            </div>
-            <div class="bg-light p-2 rounded small">
-                <span class="fw-bold text-success d-block" style="font-size:11px;">CARDIO</span>
-                ${cardioHtml || "None"}
-            </div>
-        </div>`;
-    }
-    document.getElementById('traineeLogsArea').innerHTML = html || "<div class='p-3 text-center text-muted small'>No workouts assigned yet.</div>";
-}
-
-document.getElementById('logDate').valueAsDate = new Date();
-</script>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 கிட்ஸ் பேரடைஸ் பிளே ஸ்கூல். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.</p>
+    </footer>
 
 </body>
 </html>
