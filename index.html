@@ -56,3 +56,210 @@
             text-decoration: none;
             color: #555555;
             margin-left: 30px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ff6b6b;
+        }
+
+        .btn-admission {
+            background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+            padding: 12px 25px;
+            border-radius: 30px;
+            color: #fff !important;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-admission:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Premium Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+            padding: 100px 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 70vh;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            color: #2c3e50;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero-content h1 span {
+            color: #ff6b6b;
+        }
+
+        .hero-content p {
+            font-size: 19px;
+            color: #666;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .cta-btn {
+            background-color: #4ecdc4;
+            color: white;
+            padding: 16px 40px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.4);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            background-color: #3bbcb3;
+        }
+
+        /* Features Section */
+        .services-section {
+            padding: 80px 8%;
+            text-align: center;
+        }
+
+        .services-section h2 {
+            font-size: 36px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .services-section p.sub-title {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 50px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .card-1 .icon-box { background-color: #ffeaa7; }
+        .card-2 .icon-box { background-color: #c7ecee; }
+        .card-3 .icon-box { background-color: #fab1a0; }
+
+        .feature-card h3 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2f3640;
+            color: #f5f6fa;
+            text-align: center;
+            padding: 30px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="top-bar">🎉 Admissions Open for Academic Year 2026 - 2027! Enquire Now</div>
+
+    <header>
+        <div class="logo">Tiny<span>Tots</span></div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">About Us</a>
+            <a href="#">Programs</a>
+            <a href="#">Contact</a>
+            <a href="#" class="btn-admission">Apply Online</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Where Learning is a <span>Fun Adventure!</span></h1>
+            <p>We provide a nurturing, safe, and stimulating environment to help your little ones grow, play, and discover their unique potential.</p>
+            <a href="#" class="cta-btn">Book a Campus Tour</a>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <h2>Why Parents Trust Us?</h2>
+        <p class="sub-title">We offer world-class early childhood education with care</p>
+        
+        <div class="features-grid">
+            <div class="feature-card card-1">
+                <div class="icon-box">🧩</div>
+                <h3>Play-Based Learning</h3>
+                <p>Our international curriculum focuses on cognitive growth through smart puzzles, music, and interactive storytelling.</p>
+            </div>
+            <div class="feature-card card-2">
+                <div class="icon-box">🛡️</div>
+                <h3>Ultra Safe Campus</h3>
+                <p>Equipped with 24/7 smart CCTV surveillance, child-safe interiors, and certified first-aid staff for absolute peace of mind.</p>
+            </div>
+            <div class="feature-card card-3">
+                <div class="icon-box">🚀</div>
+                <h3>Creative Activities</h3>
+                <p>Nurturing inner talents early with specialized junior classes for arts, crafts, kids-yoga, and public speaking confidence.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Tiny Tots Kindergarten. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
