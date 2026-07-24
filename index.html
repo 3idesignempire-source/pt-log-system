@@ -11,18 +11,18 @@
         .app-screen { display: none; } 
         .active-screen { display: block; } 
         
-        /* Latest Commit Timestamp Badge Styling */
+        /* Visible Latest Commit Timestamp Badge */
         .commit-stamp {
-            background-color: #e0f2fe;
-            color: #0369a1;
-            border: 1px dashed #0284c7;
-            font-size: 11px;
+            background-color: #0284c7;
+            color: #ffffff;
+            font-size: 12px;
             font-weight: 700;
             border-radius: 6px;
-            padding: 6px 10px;
+            padding: 8px 12px;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         /* Fixed Header Layout */
@@ -95,11 +95,6 @@
         .log-row { margin-bottom: 6px; }
         .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
         
-        .accordion-button-custom {
-            background-color: #ffffff; color: #1e293b; font-weight: 600; border-radius: 10px !important; border: 1px solid #e2e8f0;
-        }
-        .accordion-button-custom:not(.collapsed) { background-color: #f8fafc; color: #2563eb; border-bottom: 1px dashed #cbd5e1; box-shadow: none; }
-        
         .workout-badge { font-size: 11px; padding: 3px 6px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 4px; margin-bottom: 2px; }
         .badge-warmup { background-color: #fff7ed; color: #c2410c; }
         .badge-strength { background-color: #eff6ff; color: #1d4ed8; }
@@ -129,7 +124,7 @@
         <div class="card card-custom p-4 bg-white text-center">
             
             <div class="commit-stamp">
-                ⏱️ LATEST COMMIT: 24-JUL-2026 12:20 PM
+                ⏱️ LAST UPDATED: 24-JUL-2026 12:24 PM
             </div>
 
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
@@ -151,6 +146,10 @@
     </div>
 
     <div id="trainerDashboard" class="app-screen">
+        <div class="commit-stamp mb-3">
+            ⏱️ LAST UPDATED: 24-JUL-2026 12:24 PM
+        </div>
+        
         <div class="dashboard-header">
             <div class="header-title-section">
                 <h6 class="fw-bold mb-0 text-dark" id="trainerWelcome">👋 Welcome Trainer</h6>
@@ -323,6 +322,10 @@
     </div>
 
     <div id="traineeDashboard" class="app-screen">
+        <div class="commit-stamp mb-3">
+            ⏱️ LAST UPDATED: 24-JUL-2026 12:24 PM
+        </div>
+
         <div class="dashboard-header">
             <div class="header-title-section">
                 <h6 class="fw-bold mb-0 text-dark" id="clientWelcome">👋 Welcome</h6>
@@ -547,25 +550,6 @@ function getCategoryDropdownOptions(category) {
     return options;
 }
 
-// DROPDOWN SELECTORS
-function getWeightOptions() {
-    let opts = '<option value="0">0 kg</option>';
-    for(let i=5; i<=150; i+=5) {
-        opts += `<option value="${i}">${i} kg</option>`;
-        opts += `<option value="${i},${i+2},${i+5}">${i},${i+2},${i+5} kg</option>`;
-    }
-    return opts;
-}
-
-function getRepsOptions() {
-    let opts = '';
-    for(let i=1; i<=30; i++) {
-        opts += `<option value="${i}">${i} Reps</option>`;
-        opts += `<option value="${i},${i},${i}">${i},${i},${i} Reps</option>`;
-    }
-    return opts;
-}
-
 function getTimeOptions() {
     let opts = '';
     for(let i=5; i<=60; i+=5) {
@@ -643,7 +627,8 @@ function addWarmupRow(valBody = "General", valAct = "", valTime = "", valInt = "
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-function addStrengthRow(valBody = "Leg", valAct = "", valWt = "", valReps = "", valNotes = "") {
+/* STRENGTH ROW NOW MATCHES WARMUP FORMAT (TIME & INTENSITY) */
+function addStrengthRow(valBody = "Leg", valAct = "", valTime = "", valInt = "", valNotes = "") {
     const section = document.getElementById('strengthSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
@@ -663,12 +648,16 @@ function addStrengthRow(valBody = "Leg", valAct = "", valWt = "", valReps = "", 
         </div>
         <div class="row g-1 align-items-center">
             <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">WEIGHT (KG)</label>
-                <select class="form-select form-select-sm wt-input">${getWeightOptions()}</select>
+                <label class="small text-muted" style="font-size:10px;">TIME</label>
+                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
             </div>
             <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">REPS / SETS</label>
-                <select class="form-select form-select-sm rep-input">${getRepsOptions()}</select>
+                <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
+                <select class="form-select form-select-sm int-input">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                </select>
             </div>
         </div>
         <div class="row mt-1">
@@ -678,8 +667,8 @@ function addStrengthRow(valBody = "Leg", valAct = "", valWt = "", valReps = "", 
     section.appendChild(container);
     if(valBody) container.querySelector('.bodypart-input').value = valBody;
     if(valAct) container.querySelector('.act-input').value = valAct;
-    if(valWt) container.querySelector('.wt-input').value = valWt;
-    if(valReps) container.querySelector('.rep-input').value = valReps;
+    if(valTime) container.querySelector('.time-input').value = valTime;
+    if(valInt) container.querySelector('.int-input').value = valInt;
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
@@ -750,8 +739,8 @@ function saveWorkoutLog(e) {
         strengthData.push({
             bodyPart: row.querySelector('.bodypart-input').value,
             exercise: row.querySelector('.act-input').value,
-            weight: row.querySelector('.wt-input').value,
-            reps: row.querySelector('.rep-input').value,
+            time: row.querySelector('.time-input').value,
+            intensity: row.querySelector('.int-input').value,
             notes: row.querySelector('.notes-input').value
         });
     });
@@ -811,7 +800,7 @@ function triggerEditLog(index) {
     (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.activity, w.time, w.intensity, w.notes));
 
     document.getElementById('strengthSection').innerHTML = "";
-    (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.exercise, s.weight, s.reps, s.notes));
+    (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.exercise, s.time || "", s.intensity || "", s.notes));
 
     document.getElementById('cardioSection').innerHTML = "";
     (log.cardio || []).forEach(c => addCardioRow(c.bodyPart, c.activity, c.time, c.intensity, c.notes));
@@ -845,7 +834,7 @@ function searchLogs() {
         let strengthHtml = "";
         (l.strength || []).forEach(s => { 
             let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
-            strengthHtml += `<div class="mb-1">• ${bodyBadge}<strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            strengthHtml += `<div class="mb-1">• ${bodyBadge}<strong>${s.exercise}</strong> | Time: ${s.time || '-'} | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         let cardioHtml = "";
@@ -898,7 +887,7 @@ function renderTraineeLogs(traineeName) {
         let strengthHtml = "";
         (l.strength || []).forEach(s => { 
             let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
-            strengthHtml += `<div>• ${bodyBadge}<strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            strengthHtml += `<div>• ${bodyBadge}<strong>${s.exercise}</strong> | Time: ${s.time || '-'} | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         let cardioHtml = "";
