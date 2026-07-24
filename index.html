@@ -92,7 +92,6 @@
         .badge-strength { background-color: #eff6ff; color: #1d4ed8; }
         .badge-cardio { background-color: #ecfdf5; color: #047857; }
         
-        /* Screenshot Style Note Box Design */
         .pin-note-box {
             background-color: #f8fafc;
             border-radius: 8px;
@@ -155,7 +154,7 @@
 
             <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #ea580c, #c2410c);" onclick="showScreen('configureActivitiesScreen')">
                 <div class="icon-3d-box"><span class="icon-3d-text">⚙️</span></div>
-                <span class="btn-label-centered">Configure Master Exercises & Body Parts</span>
+                <span class="btn-label-centered">Configure Master Exercises</span>
             </button>
             
             <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #22c55e, #15803d);" onclick="openAddLogBlank()">
@@ -201,15 +200,15 @@
         </div>
     </div>
 
-    <!-- ================= 4. CONFIGURE MASTER ACTIVITIES & BODY PARTS SCREEN ================= -->
+    <!-- ================= 4. CONFIGURE MASTER ACTIVITIES SCREEN (SIMPLIFIED) ================= -->
     <div id="configureActivitiesScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-            <h5 class="fw-bold mb-0">⚙️ Master Catalog Setup</h5>
+            <h5 class="fw-bold mb-0">⚙️ Master Exercises Setup</h5>
             <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
         </div>
 
         <div class="card card-custom p-3 bg-white mb-3">
-            <h6 class="fw-bold text-orange mb-3" style="color:#ea580c;">Add Exercise with Target Body Part</h6>
+            <h6 class="fw-bold text-orange mb-3" style="color:#ea580c;">Add Global Exercise / Activity</h6>
             <form onsubmit="saveGlobalActivity(event)">
                 <div class="mb-2">
                     <label class="small fw-semibold text-secondary">WORKOUT CATEGORY</label>
@@ -219,21 +218,9 @@
                         <option value="cardio">CARDIO TRAINING</option>
                     </select>
                 </div>
-                <div class="mb-2">
-                    <label class="small fw-semibold text-secondary">TARGET BODY PART</label>
-                    <select id="actBodyPart" class="form-select form-select-sm" required>
-                        <option value="Chest">Chest</option>
-                        <option value="Back">Back</option>
-                        <option value="Arms">Arms</option>
-                        <option value="Shoulder">Shoulder</option>
-                        <option value="Leg">Leg</option>
-                        <option value="Abs/Core">Abs/Core</option>
-                        <option value="General">General / Full Body</option>
-                    </select>
-                </div>
                 <div class="mb-3">
                     <label class="small fw-semibold text-secondary">ACTIVITY / EXERCISE NAME</label>
-                    <input type="text" id="actName" class="form-control form-control-sm" placeholder="e.g., Squats, Leg Curl, Smith Machine" required>
+                    <input type="text" id="actName" class="form-control form-control-sm" placeholder="e.g., Squats, Leg Curl, Treadmill" required>
                 </div>
                 <button type="submit" class="btn btn-sm btn-warning w-100 fw-bold text-white" style="background-color:#ea580c; border:none;">ADD TO MASTER LIST</button>
             </form>
@@ -243,14 +230,14 @@
             <h6 class="fw-bold mb-2 text-secondary">Configured Exercise Catalog</h6>
             <div class="table-responsive">
                 <table class="table table-sm table-hover align-middle mb-0" style="font-size: 13px;">
-                    <thead><tr><th>Cat.</th><th>Body Part</th><th>Exercise Name</th><th class="text-end">Action</th></tr></thead>
+                    <thead><tr><th>Cat.</th><th>Exercise Name</th><th class="text-end">Action</th></tr></thead>
                     <tbody id="activityCatalogTableBody"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- ================= 5. ADD / EDIT WORKOUT LOG SCREEN ================= -->
+    <!-- ================= 5. ADD / EDIT WORKOUT LOG SCREEN (NO TYPING - DROPDOWNS ONLY) ================= -->
     <div id="addLogScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
             <h5 class="fw-bold mb-0" id="logScreenTitle">📝 Add Workout Log</h5>
@@ -271,7 +258,13 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary small">WORKOUT PROGRAM FOR THE DAY</label>
-                    <textarea id="logProgram" class="form-control" rows="2" placeholder="e.g., Leg Day" required></textarea>
+                    <select id="logProgram" class="form-select" required>
+                        <option value="Full Body Sync">Full Body Sync</option>
+                        <option value="Leg Day">Leg Day</option>
+                        <option value="Push Day (Chest/Shoulder/Triceps)">Push Day (Chest/Shoulder/Triceps)</option>
+                        <option value="Pull Day (Back/Biceps)">Pull Day (Back/Biceps)</option>
+                        <option value="Core & Cardio Focus">Core & Cardio Focus</option>
+                    </select>
                 </div>
 
                 <!-- 1. WARM UP SECTION -->
@@ -363,20 +356,20 @@
 <!-- SYSTEM DATA & LOGIC ENGINE -->
 <script>
 const defaultActivities = [
-    { category: 'strength', bodyPart: 'Leg', name: 'Squats' },
-    { category: 'strength', bodyPart: 'Leg', name: 'Leg Curl' },
-    { category: 'strength', bodyPart: 'Leg', name: 'Leg Extension' },
-    { category: 'strength', bodyPart: 'Leg', name: 'Smith machine' },
-    { category: 'strength', bodyPart: 'Leg', name: 'Hip thrust' },
-    { category: 'strength', bodyPart: 'Leg', name: 'Standing calve raise' },
-    { category: 'strength', bodyPart: 'Chest', name: 'Bench Press' },
-    { category: 'strength', bodyPart: 'Chest', name: 'Incline Press' },
-    { category: 'strength', bodyPart: 'Back', name: 'Lat Pulldown' },
-    { category: 'strength', bodyPart: 'Arms', name: 'Bicep Curls' },
-    { category: 'strength', bodyPart: 'Shoulder', name: 'Shoulder Press' },
-    { category: 'strength', bodyPart: 'Abs/Core', name: 'Crunches' },
-    { category: 'warmup', bodyPart: 'General', name: 'Treadmill Walk' },
-    { category: 'cardio', bodyPart: 'General', name: 'Cycling' }
+    { category: 'strength', name: 'Squats' },
+    { category: 'strength', name: 'Leg Curl' },
+    { category: 'strength', name: 'Leg Extension' },
+    { category: 'strength', name: 'Smith machine' },
+    { category: 'strength', name: 'Hip thrust' },
+    { category: 'strength', name: 'Standing calve raise' },
+    { category: 'strength', name: 'Bench Press' },
+    { category: 'strength', name: 'Incline Press' },
+    { category: 'strength', name: 'Lat Pulldown' },
+    { category: 'strength', name: 'Bicep Curls' },
+    { category: 'strength', name: 'Shoulder Press' },
+    { category: 'strength', name: 'Crunches' },
+    { category: 'warmup', name: 'Treadmill Walk' },
+    { category: 'cardio', name: 'Cycling' }
 ];
 
 if(!localStorage.getItem('trainees')) localStorage.setItem('trainees', JSON.stringify([]));
@@ -504,7 +497,6 @@ function saveGlobalActivity(e) {
     let master = getDB('masterActivities');
     let newAct = {
         category: document.getElementById('actCategory').value,
-        bodyPart: document.getElementById('actBodyPart').value,
         name: document.getElementById('actName').value.trim()
     };
     master.push(newAct);
@@ -518,9 +510,9 @@ function renderActivityCatalog() {
     let master = getDB('masterActivities');
     let html = "";
     master.forEach((a, index) => {
-        html += `<tr><td><span class="badge bg-secondary">${a.category.substring(0,3).toUpperCase()}</span></td><td><span class="badge bg-info text-dark">${a.bodyPart || 'General'}</span></td><td><strong>${a.name}</strong></td><td class="text-end"><button class="btn btn-xs btn-danger py-0 px-2 rounded" style="font-size:11px;" onclick="deleteGlobalActivity(${index})">X</button></td></tr>`;
+        html += `<tr><td><span class="badge bg-secondary">${a.category.substring(0,3).toUpperCase()}</span></td><td><strong>${a.name}</strong></td><td class="text-end"><button class="btn btn-xs btn-danger py-0 px-2 rounded" style="font-size:11px;" onclick="deleteGlobalActivity(${index})">X</button></td></tr>`;
     });
-    document.getElementById('activityCatalogTableBody').innerHTML = html || "<tr><td colspan='4' class='text-center text-muted'>Catalog empty.</td></tr>";
+    document.getElementById('activityCatalogTableBody').innerHTML = html || "<tr><td colspan='3' class='text-center text-muted'>Catalog empty.</td></tr>";
 }
 
 function deleteGlobalActivity(index) {
@@ -549,10 +541,48 @@ function getCategoryDropdownOptions(category) {
     let filtered = master.filter(a => a.category === category);
     let options = '<option value="">-- Select Exercise --</option>';
     filtered.forEach(a => {
-        let label = a.bodyPart ? `[${a.bodyPart}] ${a.name}` : a.name;
-        options += `<option value="${a.name}">${label}</option>`;
+        options += `<option value="${a.name}">${a.name}</option>`;
     });
     return options;
+}
+
+// DROPDOWN GENERATORS TO AVOID TYPING (WEIGHT & REPS & TIME & INTENSITY)
+function getWeightOptions() {
+    let opts = '<option value="0">0 kg</option>';
+    for(let i=5; i<=150; i+=5) {
+        opts += `<option value="${i}">${i} kg</option>`;
+        opts += `<option value="${i},${i+2},${i+5}">${i},${i+2},${i+5} kg</option>`;
+    }
+    return opts;
+}
+
+function getRepsOptions() {
+    let opts = '';
+    for(let i=1; i<=30; i++) {
+        opts += `<option value="${i}">${i} Reps</option>`;
+        opts += `<option value="${i},${i},${i}">${i},${i},${i} Reps</option>`;
+    }
+    return opts;
+}
+
+function getTimeOptions() {
+    let opts = '';
+    for(let i=5; i<=60; i+=5) {
+        opts += `<option value="${i} Mins">${i} Mins</option>`;
+    }
+    return opts;
+}
+
+function getBodyPartDropdown() {
+    return `
+        <option value="Leg">Leg</option>
+        <option value="Chest">Chest</option>
+        <option value="Back">Back</option>
+        <option value="Arms">Arms</option>
+        <option value="Shoulder">Shoulder</option>
+        <option value="Abs/Core">Abs/Core</option>
+        <option value="General">General</option>
+    `;
 }
 
 function openAddLogBlank() {
@@ -563,7 +593,7 @@ function openAddLogBlank() {
     document.getElementById('strengthSection').innerHTML = "";
     document.getElementById('cardioSection').innerHTML = "";
     if(document.getElementById('logTraineeSelect')) document.getElementById('logTraineeSelect').value = "";
-    document.getElementById('logProgram').value = "";
+    document.getElementById('logProgram').value = "Leg Day";
     document.getElementById('logDate').valueAsDate = new Date();
     showScreen('addLogScreen');
 }
@@ -577,12 +607,18 @@ function addWarmupRow(valAct = "", valTime = "", valInt = "", valNotes = "") {
     container.innerHTML = `
         <div class="row g-1 log-row align-items-center">
             <div class="col-4"><select class="form-select form-select-sm act-input" required>${dropdownHtml}</select></div>
-            <div class="col-4"><input type="text" class="form-control form-control-sm time-input" placeholder="Time (mins)"></div>
-            <div class="col-3"><input type="text" class="form-control form-control-sm int-input" placeholder="Intensity"></div>
+            <div class="col-4"><select class="form-select form-select-sm time-input">${getTimeOptions()}</select></div>
+            <div class="col-3">
+                <select class="form-select form-select-sm int-input">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
             <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
         </div>
         <div class="row mt-1">
-            <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Add notes / pinned details (e.g., Leg curl, Leg Extension)..."></textarea></div>
+            <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Add notes..."></textarea></div>
         </div>
     `;
     section.appendChild(container);
@@ -592,24 +628,40 @@ function addWarmupRow(valAct = "", valTime = "", valInt = "", valNotes = "") {
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-function addStrengthRow(valAct = "", valWt = "", valReps = "", valNotes = "") {
+function addStrengthRow(valBody = "Leg", valAct = "", valWt = "", valReps = "", valNotes = "") {
     const section = document.getElementById('strengthSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
     let dropdownHtml = getCategoryDropdownOptions('strength');
     
     container.innerHTML = `
-        <div class="row g-1 log-row align-items-center">
-            <div class="col-4"><select class="form-select form-select-sm act-input" required>${dropdownHtml}</select></div>
-            <div class="col-4"><input type="text" class="form-control form-control-sm wt-input" placeholder="Weight (e.g. 23,25,27)"></div>
-            <div class="col-3"><input type="text" class="form-control form-control-sm rep-input" placeholder="Reps (e.g. 15,15,15)"></div>
-            <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
+        <div class="row g-1 log-row align-items-center mb-1">
+            <div class="col-5">
+                <label class="small text-muted" style="font-size:10px;">BODY PART</label>
+                <select class="form-select form-select-sm bodypart-input" required>${getBodyPartDropdown()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">EXERCISE</label>
+                <select class="form-select form-select-sm act-input" required>${dropdownHtml}</select>
+            </div>
+            <div class="col-1 text-end pt-3"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
+        </div>
+        <div class="row g-1 align-items-center">
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">WEIGHT (KG)</label>
+                <select class="form-select form-select-sm wt-input">${getWeightOptions()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">REPS / SETS</label>
+                <select class="form-select form-select-sm rep-input">${getRepsOptions()}</select>
+            </div>
         </div>
         <div class="row mt-1">
             <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Add note (e.g. Leg curl, Smith machine)..."></textarea></div>
         </div>
     `;
     section.appendChild(container);
+    if(valBody) container.querySelector('.bodypart-input').value = valBody;
     if(valAct) container.querySelector('.act-input').value = valAct;
     if(valWt) container.querySelector('.wt-input').value = valWt;
     if(valReps) container.querySelector('.rep-input').value = valReps;
@@ -625,8 +677,14 @@ function addCardioRow(valAct = "", valTime = "", valInt = "", valNotes = "") {
     container.innerHTML = `
         <div class="row g-1 log-row align-items-center">
             <div class="col-4"><select class="form-select form-select-sm act-input" required>${dropdownHtml}</select></div>
-            <div class="col-4"><input type="text" class="form-control form-control-sm time-input" placeholder="Time"></div>
-            <div class="col-3"><input type="text" class="form-control form-control-sm int-input" placeholder="Intensity"></div>
+            <div class="col-4"><select class="form-select form-select-sm time-input">${getTimeOptions()}</select></div>
+            <div class="col-3">
+                <select class="form-select form-select-sm int-input">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
             <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
         </div>
         <div class="row mt-1">
@@ -660,6 +718,7 @@ function saveWorkoutLog(e) {
     let strengthData = [];
     strengthRows.forEach(row => {
         strengthData.push({
+            bodyPart: row.querySelector('.bodypart-input').value,
             exercise: row.querySelector('.act-input').value,
             weight: row.querySelector('.wt-input').value,
             reps: row.querySelector('.rep-input').value,
@@ -721,7 +780,7 @@ function triggerEditLog(index) {
     (log.warmup || []).forEach(w => addWarmupRow(w.activity, w.time, w.intensity, w.notes));
 
     document.getElementById('strengthSection').innerHTML = "";
-    (log.strength || []).forEach(s => addStrengthRow(s.exercise, s.weight, s.reps, s.notes));
+    (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.exercise, s.weight, s.reps, s.notes));
 
     document.getElementById('cardioSection').innerHTML = "";
     (log.cardio || []).forEach(c => addCardioRow(c.activity, c.time, c.intensity, c.notes));
@@ -737,7 +796,7 @@ function triggerDeleteLog(index) {
     }
 }
 
-// SEARCH DISPLAY MATCHING SCREENSHOT EXACT FORMATTING
+// EXACT MATCH DISPLAY FORMATTING
 function searchLogs() {
     let targetTrainee = document.getElementById('searchTraineeSelect').value;
     let logs = getDB('workoutLogs');
@@ -754,7 +813,8 @@ function searchLogs() {
 
         let strengthHtml = "";
         (l.strength || []).forEach(s => { 
-            strengthHtml += `<div class="mb-1">• <strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
+            strengthHtml += `<div class="mb-1">• ${bodyBadge}<strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         let cardioHtml = "";
@@ -804,12 +864,13 @@ function renderTraineeLogs(traineeName) {
 
         let strengthHtml = "";
         (l.strength || []).forEach(s => { 
-            strengthHtml += `<div>• <strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
+            strengthHtml += `<div>• ${bodyBadge}<strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
-            cardioHtml += `<div>• <strong>${c.activity}</strong> | ${c.time} | ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
+            cardioHtml += `<div>• <strong>${c.activity}</strong> | Time: ${c.time} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
         html += `
