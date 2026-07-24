@@ -1,54 +1,939 @@
 <!DOCTYPE html>
-<html lang="ta">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gym PT Log System</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 15px; }
-    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    h2, h3 { color: #2c3e50; text-align: center; }
-    label { font-weight: bold; display: block; margin-top: 10px; }
-    input, select, textarea, button { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-    button { background: #27ae60; color: white; font-weight: bold; border: none; margin-top: 15px; cursor: pointer; }
-    button:hover { background: #219150; }
-    .status-card { background: #eef9f1; border-left: 5px solid #27ae60; padding: 10px; margin-top: 10px; border-radius: 4px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Log System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; font-family: -apple-system, sans-serif; }
+        .card-custom { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: none; }
+        .app-screen { display: none; } 
+        .active-screen { display: block; } 
+        
+        /* Visible Latest Commit Timestamp Badge */
+        .commit-stamp {
+            background-color: #0284c7;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 8px 12px;
+            text-align: center;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Fixed Header Layout */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+        }
+        .header-title-section { flex: 1; padding-right: 8px; }
+        .header-btn-group { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
+        .btn-header-action { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 8px; white-space: nowrap; }
+
+        /* Centered Menu Buttons */
+        .btn-stacked-action {
+            width: 100%;
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
+            padding: 20px 16px;
+            font-weight: 700;
+            font-size: 16px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+            border: none;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+        .btn-stacked-action:hover { opacity: 0.95; }
+
+        /* 3D Glass Box Icons */
+        .icon-3d-box {
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            padding: 10px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px; 
+            box-shadow: inset 0 3px 6px rgba(255,255,255,0.4), inset 0 -3px 6px rgba(0,0,0,0.1), 0 6px 12px rgba(0,0,0,0.15);
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
+
+        .icon-3d-text {
+            font-size: 30px;
+            filter: drop-shadow(0px 5px 8px rgba(0,0,0,0.35)) drop-shadow(0px 1px 2px rgba(0,0,0,0.25)) saturate(1.4); 
+            pointer-events: none;
+        }
+
+        .btn-label-centered { letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.15); pointer-events: none; }
+        
+        /* Logsheet Sections Styling */
+        .section-header-orange { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
+        .section-header-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
+        .section-header-green { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
+        
+        .log-row-container { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+        .log-row { margin-bottom: 6px; }
+        .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
+        
+        .workout-badge { font-size: 11px; padding: 3px 6px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 4px; margin-bottom: 2px; }
+        .badge-warmup { background-color: #fff7ed; color: #c2410c; }
+        .badge-strength { background-color: #eff6ff; color: #1d4ed8; }
+        .badge-cardio { background-color: #ecfdf5; color: #047857; }
+        
+        .pin-note-box {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: #334155;
+            margin-top: 3px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copyright-text { font-size: 11px; color: #94a3b8; margin-top: 30px; letter-spacing: 0.5px; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>🏋️‍♂️ PT Workout Log Entry</h2>
-  
-  <form id="logForm">
-    <label>Client Name (கிளைண்ட் பெயர்):</label>
-    <input type="text" placeholder="உம்: கார்த்திக்" required>
+<div class="container my-4" style="max-width: 600px;">
 
-    <label>Trainer Name (ட்ரைனர் பெயர்):</label>
-    <input type="text" placeholder="உம்: வினோத்" required>
+    <!-- ================= 1. LOGIN SCREEN ================= -->
+    <div id="loginScreen" class="app-screen active-screen">
+        <div class="card card-custom p-4 bg-white text-center">
+            
+            <!-- LATEST COMMIT TIMESTAMP BADGE -->
+            <div class="commit-stamp">
+                ⏱️ LAST UPDATED: 24-JUL-2026 12:28 PM
+            </div>
 
-    <label>Workout Details (ஒர்க்அவுட் விபரம்):</label>
-    <textarea rows="3" placeholder="உம்: Chest & Triceps - 4 Sets" required></textarea>
+            <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
+            <p class="text-muted small mb-4">Track workouts, achieve goals.</p>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-3 text-start">
+                    <label class="form-label small fw-semibold text-secondary">USERNAME</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username (e.g., prasaath)" required>
+                </div>
+                <div class="mb-4 text-start">
+                    <label class="form-label small fw-semibold text-secondary">PASSWORD</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">LOGIN</button>
+            </form>
+            <div class="copyright-text">&copy; 2026 <span class="fw-bold text-secondary">3i design empire.com</span>.</div>
+        </div>
+    </div>
 
-    <button type="button" onclick="addStatus()">Submit & Update Status</button>
-  </form>
+    <!-- ================= 2. TRAINER DASHBOARD ================= -->
+    <div id="trainerDashboard" class="app-screen">
+        <div class="commit-stamp mb-3">
+            ⏱️ LAST UPDATED: 24-JUL-2026 12:28 PM
+        </div>
+        
+        <div class="dashboard-header">
+            <div class="header-title-section">
+                <h6 class="fw-bold mb-0 text-dark" id="trainerWelcome">👋 Welcome Trainer</h6>
+                <small class="text-muted" style="font-size: 11px;">Gym Management</small>
+            </div>
+            <div class="header-btn-group">
+                <button class="btn btn-header-action btn-outline-primary" onclick="openChangePasswordModal('trainer')">Pass 🔑</button>
+                <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        
+        <div class="d-flex flex-column gap-2 mb-4">
+            <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);" onclick="showScreen('manageTraineesScreen')">
+                <div class="icon-3d-box"><span class="icon-3d-text">👥</span></div>
+                <span class="btn-label-centered">Register / Manage Trainee</span>
+            </button>
 
-  <hr style="margin-top:25px;">
+            <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #ea580c, #c2410c);" onclick="showScreen('configureActivitiesScreen')">
+                <div class="icon-3d-box"><span class="icon-3d-text">⚙️</span></div>
+                <span class="btn-label-centered">Configure Master Exercises</span>
+            </button>
+            
+            <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #22c55e, #15803d);" onclick="openAddLogBlank()">
+                <div class="icon-3d-box"><span class="icon-3d-text">📝</span></div>
+                <span class="btn-label-centered">Add Workout Log</span>
+            </button>
+            
+            <div class="mt-4 pt-2">
+                <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #475569, #0f172a);" onclick="showScreen('viewLogsScreen')">
+                    <div class="icon-3d-box"><span class="icon-3d-text">🔍</span></div>
+                    <span class="btn-label-centered">View, Edit & Delete Logs</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
-  <h3>📊 Live Workout Status</h3>
-  <div id="statusList">
-    <div class="status-card">
-      <strong>கிளைண்ட்:</strong> சுரேஷ் | <strong>ட்ரைனர்:</strong> ரமேஷ்<br>
-      <strong>ஒர்க்அவுட்:</strong> Leg Day + Cardio<br>
-      <small style="color:gray;">Status: Completed Today at 10:30 AM</small>
+    <!-- ================= 3. MANAGE TRAINEES SCREEN ================= -->
+    <div id="manageTraineesScreen" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+            <h5 class="fw-bold mb-0">👥 Manage Trainees</h5>
+            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
+        </div>
+
+        <div class="card card-custom p-3 bg-white mb-3">
+            <h6 class="fw-bold text-primary mb-3">Register New Trainee</h6>
+            <form onsubmit="saveTrainee(event)">
+                <div class="mb-2"><input type="text" id="tName" class="form-control form-control-sm" placeholder="Full Name" required></div>
+                <div class="mb-2"><input type="text" id="tUser" class="form-control form-control-sm" placeholder="Username (For Client Login)" required></div>
+                <div class="mb-2"><input type="password" id="tPass" class="form-control form-control-sm" placeholder="Password" required></div>
+                <div class="mb-3"><input type="tel" id="tPhone" class="form-control form-control-sm" placeholder="Phone Number"></div>
+                <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">SAVE TRAINEE</button>
+            </form>
+        </div>
+
+        <div class="card card-custom p-3 bg-white">
+            <h6 class="fw-bold mb-2 text-secondary">Active Trainees List</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 14px;">
+                    <thead><tr><th>Name</th><th>Username</th><th class="text-end">Actions</th></tr></thead>
+                    <tbody id="traineeTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 4. CONFIGURE MASTER ACTIVITIES SCREEN ================= -->
+    <div id="configureActivitiesScreen" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+            <h5 class="fw-bold mb-0">⚙️ Master Exercises Setup</h5>
+            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
+        </div>
+
+        <div class="card card-custom p-3 bg-white mb-3">
+            <h6 class="fw-bold text-orange mb-3" style="color:#ea580c;">Add Global Exercise / Activity</h6>
+            <form onsubmit="saveGlobalActivity(event)">
+                <div class="mb-2">
+                    <label class="small fw-semibold text-secondary">WORKOUT CATEGORY</label>
+                    <select id="actCategory" class="form-select form-select-sm" required>
+                        <option value="warmup">WARM UP</option>
+                        <option value="strength">STRENGTH TRAINING</option>
+                        <option value="cardio">CARDIO TRAINING</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="small fw-semibold text-secondary">ACTIVITY / EXERCISE NAME</label>
+                    <input type="text" id="actName" class="form-control form-control-sm" placeholder="e.g., Stretching, Treadmill, Leg Curl" required>
+                </div>
+                <button type="submit" class="btn btn-sm btn-warning w-100 fw-bold text-white" style="background-color:#ea580c; border:none;">ADD TO MASTER LIST</button>
+            </form>
+        </div>
+
+        <div class="card card-custom p-3 bg-white">
+            <h6 class="fw-bold mb-2 text-secondary">Configured Exercise Catalog</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 13px;">
+                    <thead><tr><th>Cat.</th><th>Exercise Name</th><th class="text-end">Action</th></tr></thead>
+                    <tbody id="activityCatalogTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 5. ADD / EDIT WORKOUT LOG SCREEN ================= -->
+    <div id="addLogScreen" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+            <h5 class="fw-bold mb-0" id="logScreenTitle">📝 Add Workout Log</h5>
+            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
+        </div>
+
+        <div class="card card-custom p-3 bg-white">
+            <form onsubmit="saveWorkoutLog(event)">
+                <input type="hidden" id="editLogIndex" value="-1">
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary small">SELECT ACTIVE TRAINEE</label>
+                    <select class="form-select" id="logTraineeSelect" required><option value="">-- Choose Trainee --</option></select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary small">DATE</label>
+                    <input type="date" id="logDate" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary small">WORKOUT PROGRAM FOR THE DAY</label>
+                    <select id="logProgram" class="form-select" required>
+                        <option value="Full Body Sync">Full Body Sync</option>
+                        <option value="Leg Day">Leg Day</option>
+                        <option value="Push Day (Chest/Shoulder/Triceps)">Push Day (Chest/Shoulder/Triceps)</option>
+                        <option value="Pull Day (Back/Biceps)">Pull Day (Back/Biceps)</option>
+                        <option value="Core & Cardio Focus">Core & Cardio Focus</option>
+                    </select>
+                </div>
+
+                <!-- 1. WARM UP SECTION -->
+                <div class="d-flex justify-content-between align-items-center section-header-orange mb-2">
+                    <span>WARM UP</span>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addWarmupRow()">+ Add</button>
+                </div>
+                <div id="warmupSection" class="mb-3"></div>
+
+                <!-- 2. STRENGTH TRAINING SECTION (REMOVED WEIGHT/REPS, ADDED TIME & INTENSITY) -->
+                <div class="d-flex justify-content-between align-items-center section-header-blue mb-2">
+                    <span>STRENGTH TRAINING</span>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addStrengthRow()">+ Add</button>
+                </div>
+                <div id="strengthSection" class="mb-3"></div>
+
+                <!-- 3. CARDIO TRAINING SECTION -->
+                <div class="d-flex justify-content-between align-items-center section-header-green mb-2">
+                    <span>CARDIO TRAINING</span>
+                    <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addCardioRow()">+ Add</button>
+                </div>
+                <div id="cardioSection" class="mb-3"></div>
+
+                <button type="submit" class="btn btn-success w-100 fw-bold mt-4 py-2" id="logSubmitBtn">SUBMIT WORKOUT LOG</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= 6. VIEW, EDIT & DELETE LOGS ================= -->
+    <div id="viewLogsScreen" class="app-screen">
+        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+            <h5 class="fw-bold mb-0 text-dark">🔍 Search & Manage Logs</h5>
+            <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
+        </div>
+
+        <div class="card card-custom p-3 bg-white mb-3">
+            <div class="row g-2">
+                <div class="col-12">
+                    <select class="form-select form-select-sm" id="searchTraineeSelect"><option value="">All Trainees</option></select>
+                </div>
+                <div class="col-12"><button class="btn btn-sm btn-primary w-100 fw-bold" onclick="searchLogs()">SEARCH LOGS</button></div>
+            </div>
+        </div>
+
+        <h6 class="fw-semibold text-secondary mb-2 small px-1">WORKOUT HISTORY RESULT</h6>
+        <div class="accordion" id="workoutLogsAccordion"></div>
+    </div>
+
+    <!-- ================= 7. TRAINEE DASHBOARD ================= -->
+    <div id="traineeDashboard" class="app-screen">
+        <div class="commit-stamp mb-3">
+            ⏱️ LAST UPDATED: 24-JUL-2026 12:28 PM
+        </div>
+
+        <div class="dashboard-header">
+            <div class="header-title-section">
+                <h6 class="fw-bold mb-0 text-dark" id="clientWelcome">👋 Welcome</h6>
+                <small class="text-muted" style="font-size: 11px;">Your Personal Workout Track</small>
+            </div>
+            <div class="header-btn-group">
+                <button class="btn btn-header-action btn-outline-primary" id="clientPassBtn">Pass 🔑</button>
+                <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div id="traineeLogsArea"></div>
+    </div>
+
+</div>
+
+<!-- ================= CHANGE PASSWORD MODAL ================= -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
+    <div class="modal-content" style="border-radius:12px;">
+      <div class="modal-header py-2 px-3">
+        <h6 class="modal-title fw-bold">🔑 Change Password</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="passModalUserType">
+        <div class="mb-2">
+            <label class="small fw-semibold text-secondary mb-1">NEW PASSWORD</label>
+            <input type="password" id="newPasswordInput" class="form-control form-control-sm" placeholder="Enter new password" required>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary w-100 fw-bold mt-2" onclick="processPasswordChange()">UPDATE PASSWORD</button>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- SYSTEM DATA & LOGIC ENGINE -->
 <script>
-  function addStatus() {
-    alert("லாக் வெற்றிகரமாக அப்டேட் செய்யப்பட்டது ஜி!");
-  }
+const defaultActivities = [
+    { category: 'warmup', name: 'Stretching' },
+    { category: 'warmup', name: 'Jumping Jacks' },
+    { category: 'strength', name: 'Squats' },
+    { category: 'strength', name: 'Leg Curl' },
+    { category: 'strength', name: 'Leg Extension' },
+    { category: 'strength', name: 'Smith machine' },
+    { category: 'strength', name: 'Bench Press' },
+    { category: 'cardio', name: 'Treadmill Walk' },
+    { category: 'cardio', name: 'Cycling' },
+    { category: 'cardio', name: 'Rowing Machine' }
+];
+
+if(!localStorage.getItem('trainees')) localStorage.setItem('trainees', JSON.stringify([]));
+if(!localStorage.getItem('workoutLogs')) localStorage.setItem('workoutLogs', JSON.stringify([]));
+if(!localStorage.getItem('masterActivities')) localStorage.setItem('masterActivities', JSON.stringify(defaultActivities));
+if(!localStorage.getItem('trainerPassword')) localStorage.setItem('trainerPassword', 'trainer123');
+
+let currentLoggedInClientUsername = ""; 
+
+function getDB(key) { return JSON.parse(localStorage.getItem(key)); }
+function saveDB(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+function showScreen(screenId) {
+    const screens = document.querySelectorAll('.app-screen');
+    screens.forEach(screen => screen.classList.remove('active-screen'));
+    document.getElementById(screenId).classList.add('active-screen');
+    window.scrollTo(0, 0);
+    
+    if(screenId === 'manageTraineesScreen') renderTrainees();
+    if(screenId === 'configureActivitiesScreen') renderActivityCatalog();
+    if(screenId === 'addLogScreen' || screenId === 'viewLogsScreen') populateTraineeDropdowns();
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    const rawUser = document.getElementById('username').value.trim();
+    const user = rawUser.toLowerCase();
+    const pass = document.getElementById('password').value; 
+    
+    if (user === 'trainer' || user === 'pt' || user === 'prasaath') {
+        let savedTrainerPass = localStorage.getItem('trainerPassword') || 'trainer123';
+        if (pass === savedTrainerPass) {
+            document.getElementById('trainerWelcome').innerText = "👋 Welcome, " + rawUser;
+            showScreen('trainerDashboard');
+        } else {
+            alert("Invalid Trainer Password!");
+        }
+    } else {
+        let trainees = getDB('trainees');
+        let found = trainees.find(t => t.username.toLowerCase() === user && t.password === pass);
+        if(found) {
+            currentLoggedInClientUsername = found.username;
+            document.getElementById('clientWelcome').innerText = "👋 Welcome, " + found.name;
+            document.getElementById('clientPassBtn').setAttribute('onclick', `openChangePasswordModal('client', '${found.username}')`);
+            showScreen('traineeDashboard');
+            renderTraineeLogs(found.name);
+        } else {
+            alert("Invalid Username or Password!");
+        }
+    }
+}
+
+function logout() {
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    currentLoggedInClientUsername = "";
+    showScreen('loginScreen');
+}
+
+let targetClientUser = "";
+function openChangePasswordModal(type, clientUser = "") {
+    document.getElementById('passModalUserType').value = type;
+    document.getElementById('newPasswordInput').value = "";
+    targetClientUser = clientUser;
+    let myModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+    myModal.show();
+}
+
+function processPasswordChange() {
+    let type = document.getElementById('passModalUserType').value;
+    let newPass = document.getElementById('newPasswordInput').value.trim();
+    if(!newPass) { alert("Please enter a valid password!"); return; }
+
+    if(type === 'trainer') {
+        localStorage.setItem('trainerPassword', newPass);
+        alert("Trainer password updated successfully!");
+    } else {
+        let trainees = getDB('trainees');
+        let idx = trainees.findIndex(t => t.username.toLowerCase() === targetClientUser.toLowerCase());
+        if(idx !== -1) {
+            trainees[idx].password = newPass;
+            saveDB('trainees', trainees);
+            alert("Client password updated successfully!");
+        }
+    }
+    bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+}
+
+function saveTrainee(e) {
+    e.preventDefault();
+    let trainees = getDB('trainees');
+    let newTrainee = {
+        name: document.getElementById('tName').value,
+        username: document.getElementById('tUser').value.trim(),
+        password: document.getElementById('tPass').value,
+        phone: document.getElementById('tPhone').value
+    };
+    trainees.push(newTrainee);
+    saveDB('trainees', trainees);
+    alert('Trainee Registered Successfully!');
+    e.target.reset();
+    renderTrainees();
+}
+
+function renderTrainees() {
+    let trainees = getDB('trainees');
+    let html = "";
+    trainees.forEach((t, index) => {
+        html += `<tr><td>${t.name}</td><td>${t.username}</td><td class="text-end"><button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size:12px;" onclick="deleteTrainee(${index})">Del</button></td></tr>`;
+    });
+    document.getElementById('traineeTableBody').innerHTML = html || "<tr><td colspan='3' class='text-center text-muted'>No trainees found.</td></tr>";
+}
+
+function deleteTrainee(index) {
+    if(confirm("Delete this Trainee?")) {
+        let trainees = getDB('trainees');
+        trainees.splice(index, 1);
+        saveDB('trainees', trainees);
+        renderTrainees();
+    }
+}
+
+function saveGlobalActivity(e) {
+    e.preventDefault();
+    let master = getDB('masterActivities');
+    let newAct = {
+        category: document.getElementById('actCategory').value,
+        name: document.getElementById('actName').value.trim()
+    };
+    master.push(newAct);
+    saveDB('masterActivities', master);
+    alert('Exercise added to Master List successfully!');
+    e.target.reset();
+    renderActivityCatalog();
+}
+
+function renderActivityCatalog() {
+    let master = getDB('masterActivities');
+    let html = "";
+    master.forEach((a, index) => {
+        html += `<tr><td><span class="badge bg-secondary">${a.category.substring(0,3).toUpperCase()}</span></td><td><strong>${a.name}</strong></td><td class="text-end"><button class="btn btn-xs btn-danger py-0 px-2 rounded" style="font-size:11px;" onclick="deleteGlobalActivity(${index})">X</button></td></tr>`;
+    });
+    document.getElementById('activityCatalogTableBody').innerHTML = html || "<tr><td colspan='3' class='text-center text-muted'>Catalog empty.</td></tr>";
+}
+
+function deleteGlobalActivity(index) {
+    if(confirm("Remove from standard list?")) {
+        let master = getDB('masterActivities');
+        master.splice(index, 1);
+        saveDB('masterActivities', master);
+        renderActivityCatalog();
+    }
+}
+
+function populateTraineeDropdowns() {
+    let trainees = getDB('trainees');
+    let selectOptions = '<option value="">-- Choose Trainee --</option>';
+    let searchOptions = '<option value="">All Trainees</option>';
+    trainees.forEach(t => {
+        selectOptions += `<option value="${t.name}">${t.name}</option>`;
+        searchOptions += `<option value="${t.name}">${t.name}</option>`;
+    });
+    if(document.getElementById('logTraineeSelect')) document.getElementById('logTraineeSelect').innerHTML = selectOptions;
+    if(document.getElementById('searchTraineeSelect')) document.getElementById('searchTraineeSelect').innerHTML = searchOptions;
+}
+
+function getCategoryDropdownOptions(category) {
+    let master = getDB('masterActivities');
+    let filtered = master.filter(a => a.category === category);
+    let options = '<option value="">-- Select Exercise --</option>';
+    filtered.forEach(a => {
+        options += `<option value="${a.name}">${a.name}</option>`;
+    });
+    return options;
+}
+
+function getTimeOptions() {
+    let opts = '';
+    for(let i=5; i<=60; i+=5) {
+        opts += `<option value="${i} Mins">${i} Mins</option>`;
+    }
+    return opts;
+}
+
+function getBodyPartDropdown() {
+    return `
+        <option value="General">General</option>
+        <option value="Leg">Leg</option>
+        <option value="Chest">Chest</option>
+        <option value="Back">Back</option>
+        <option value="Arms">Arms</option>
+        <option value="Shoulder">Shoulder</option>
+        <option value="Abs/Core">Abs/Core</option>
+    `;
+}
+
+function openAddLogBlank() {
+    document.getElementById('editLogIndex').value = "-1";
+    document.getElementById('logScreenTitle').innerText = "📝 Add Workout Log";
+    document.getElementById('logSubmitBtn').innerText = "SUBMIT WORKOUT LOG";
+    document.getElementById('warmupSection').innerHTML = "";
+    document.getElementById('strengthSection').innerHTML = "";
+    document.getElementById('cardioSection').innerHTML = "";
+    if(document.getElementById('logTraineeSelect')) document.getElementById('logTraineeSelect').value = "";
+    document.getElementById('logProgram').value = "Leg Day";
+    document.getElementById('logDate').valueAsDate = new Date();
+    showScreen('addLogScreen');
+}
+
+function addWarmupRow(valBody = "General", valAct = "", valTime = "", valInt = "", valNotes = "") {
+    const section = document.getElementById('warmupSection');
+    const container = document.createElement('div');
+    container.className = 'log-row-container';
+    let dropdownHtml = getCategoryDropdownOptions('warmup');
+    
+    container.innerHTML = `
+        <div class="row g-1 log-row align-items-center mb-1">
+            <div class="col-5">
+                <label class="small text-muted" style="font-size:10px;">BODY PART</label>
+                <select class="form-select form-select-sm bodypart-input" required>${getBodyPartDropdown()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">EXERCISE / ACTIVITY</label>
+                <select class="form-select form-select-sm act-input" required>${dropdownHtml}</select>
+            </div>
+            <div class="col-1 text-end pt-3"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
+        </div>
+        <div class="row g-1 align-items-center">
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">TIME</label>
+                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
+                <select class="form-select form-select-sm int-input">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Remarks / Notes..."></textarea></div>
+        </div>
+    `;
+    section.appendChild(container);
+    if(valBody) container.querySelector('.bodypart-input').value = valBody;
+    if(valAct) container.querySelector('.act-input').value = valAct;
+    if(valTime) container.querySelector('.time-input').value = valTime;
+    if(valInt) container.querySelector('.int-input').value = valInt;
+    if(valNotes) container.querySelector('.notes-input').value = valNotes;
+}
+
+/* STRENGTH ROW - NO WEIGHT/REPS, EXACT MATCH TO WARMUP & CARDIO (TIME & INTENSITY) */
+function addStrengthRow(valBody = "Leg", valAct = "", valTime = "", valInt = "", valNotes = "") {
+    const section = document.getElementById('strengthSection');
+    const container = document.createElement('div');
+    container.className = 'log-row-container';
+    let dropdownHtml = getCategoryDropdownOptions('strength');
+    
+    container.innerHTML = `
+        <div class="row g-1 log-row align-items-center mb-1">
+            <div class="col-5">
+                <label class="small text-muted" style="font-size:10px;">BODY PART</label>
+                <select class="form-select form-select-sm bodypart-input" required>${getBodyPartDropdown()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">EXERCISE</label>
+                <select class="form-select form-select-sm act-input" required>${dropdownHtml}</select>
+            </div>
+            <div class="col-1 text-end pt-3"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
+        </div>
+        <div class="row g-1 align-items-center">
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">TIME</label>
+                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
+                <select class="form-select form-select-sm int-input">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Remarks / Notes..."></textarea></div>
+        </div>
+    `;
+    section.appendChild(container);
+    if(valBody) container.querySelector('.bodypart-input').value = valBody;
+    if(valAct) container.querySelector('.act-input').value = valAct;
+    if(valTime) container.querySelector('.time-input').value = valTime;
+    if(valInt) container.querySelector('.int-input').value = valInt;
+    if(valNotes) container.querySelector('.notes-input').value = valNotes;
+}
+
+function addCardioRow(valBody = "General", valAct = "", valTime = "", valInt = "", valNotes = "") {
+    const section = document.getElementById('cardioSection');
+    const container = document.createElement('div');
+    container.className = 'log-row-container';
+    let dropdownHtml = getCategoryDropdownOptions('cardio');
+    
+    container.innerHTML = `
+        <div class="row g-1 log-row align-items-center mb-1">
+            <div class="col-5">
+                <label class="small text-muted" style="font-size:10px;">BODY PART</label>
+                <select class="form-select form-select-sm bodypart-input" required>${getBodyPartDropdown()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">EXERCISE / ACTIVITY</label>
+                <select class="form-select form-select-sm act-input" required>${dropdownHtml}</select>
+            </div>
+            <div class="col-1 text-end pt-3"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
+        </div>
+        <div class="row g-1 align-items-center">
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">TIME</label>
+                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
+                <select class="form-select form-select-sm int-input">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Remarks / Notes..."></textarea></div>
+        </div>
+    `;
+    section.appendChild(container);
+    if(valBody) container.querySelector('.bodypart-input').value = valBody;
+    if(valAct) container.querySelector('.act-input').value = valAct;
+    if(valTime) container.querySelector('.time-input').value = valTime;
+    if(valInt) container.querySelector('.int-input').value = valInt;
+    if(valNotes) container.querySelector('.notes-input').value = valNotes;
+}
+
+function saveWorkoutLog(e) {
+    e.preventDefault();
+    let logs = getDB('workoutLogs');
+    let editIndex = parseInt(document.getElementById('editLogIndex').value);
+    
+    let warmupRows = document.querySelectorAll('#warmupSection .log-row-container');
+    let warmupData = [];
+    warmupRows.forEach(row => {
+        warmupData.push({
+            bodyPart: row.querySelector('.bodypart-input').value,
+            activity: row.querySelector('.act-input').value,
+            time: row.querySelector('.time-input').value,
+            intensity: row.querySelector('.int-input').value,
+            notes: row.querySelector('.notes-input').value
+        });
+    });
+
+    let strengthRows = document.querySelectorAll('#strengthSection .log-row-container');
+    let strengthData = [];
+    strengthRows.forEach(row => {
+        strengthData.push({
+            bodyPart: row.querySelector('.bodypart-input').value,
+            exercise: row.querySelector('.act-input').value,
+            time: row.querySelector('.time-input').value,
+            intensity: row.querySelector('.int-input').value,
+            notes: row.querySelector('.notes-input').value
+        });
+    });
+
+    let cardioRows = document.querySelectorAll('#cardioSection .log-row-container');
+    let cardioData = [];
+    cardioRows.forEach(row => {
+        cardioData.push({
+            bodyPart: row.querySelector('.bodypart-input').value,
+            activity: row.querySelector('.act-input').value,
+            time: row.querySelector('.time-input').value,
+            intensity: row.querySelector('.int-input').value,
+            notes: row.querySelector('.notes-input').value
+        });
+    });
+
+    let logObj = {
+        trainee: document.getElementById('logTraineeSelect').value,
+        date: document.getElementById('logDate').value,
+        program: document.getElementById('logProgram').value,
+        warmup: warmupData,
+        strength: strengthData,
+        cardio: cardioData
+    };
+
+    if(editIndex === -1) {
+        logs.push(logObj);
+        alert('Workout Log Added Successfully!');
+    } else {
+        logs[editIndex] = logObj;
+        alert('Workout Log Updated Successfully!');
+    }
+    
+    saveDB('workoutLogs', logs);
+    e.target.reset();
+    openAddLogBlank();
+    showScreen('trainerDashboard');
+}
+
+function triggerEditLog(index) {
+    let logs = getDB('workoutLogs');
+    let log = logs[index];
+    if(!log) return;
+
+    showScreen('addLogScreen');
+    populateTraineeDropdowns();
+
+    document.getElementById('editLogIndex').value = index;
+    document.getElementById('logScreenTitle').innerText = "✏️ Edit Workout Log";
+    document.getElementById('logSubmitBtn').innerText = "UPDATE WORKOUT LOG";
+
+    document.getElementById('logTraineeSelect').value = log.trainee;
+    document.getElementById('logDate').value = log.date;
+    document.getElementById('logProgram').value = log.program;
+
+    document.getElementById('warmupSection').innerHTML = "";
+    (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.activity, w.time, w.intensity, w.notes));
+
+    document.getElementById('strengthSection').innerHTML = "";
+    (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.exercise, s.time || "", s.intensity || "", s.notes));
+
+    document.getElementById('cardioSection').innerHTML = "";
+    (log.cardio || []).forEach(c => addCardioRow(c.bodyPart, c.activity, c.time, c.intensity, c.notes));
+}
+
+function triggerDeleteLog(index) {
+    if(confirm("Are you sure you want to permanently delete this workout log?")) {
+        let logs = getDB('workoutLogs');
+        logs.splice(index, 1);
+        saveDB('workoutLogs', logs);
+        alert("Workout record successfully deleted.");
+        searchLogs(); 
+    }
+}
+
+function searchLogs() {
+    let targetTrainee = document.getElementById('searchTraineeSelect').value;
+    let logs = getDB('workoutLogs');
+    
+    let html = "";
+    for(let i = logs.length - 1; i >= 0; i--) {
+        let l = logs[i];
+        if(targetTrainee && l.trainee !== targetTrainee) continue;
+
+        let warmupHtml = "";
+        (l.warmup || []).forEach(w => { 
+            let bodyBadge = w.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${w.bodyPart}]</span>` : '';
+            warmupHtml += `<div class="mb-1">• ${bodyBadge}<strong>${w.activity}</strong> | Time: ${w.time} | Int: ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
+        });
+
+        let strengthHtml = "";
+        (l.strength || []).forEach(s => { 
+            let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
+            strengthHtml += `<div class="mb-1">• ${bodyBadge}<strong>${s.exercise}</strong> | Time: ${s.time || '-'} | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+        });
+
+        let cardioHtml = "";
+        (l.cardio || []).forEach(c => { 
+            let bodyBadge = c.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${c.bodyPart}]</span>` : '';
+            cardioHtml += `<div class="mb-1">• ${bodyBadge}<strong>${c.activity}</strong> | Time: ${c.time} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
+        });
+
+        html += `
+        <div class="card card-custom mb-3 overflow-hidden border">
+            <div class="card-body p-3 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h5 class="fw-bold mb-0 text-dark">${l.trainee}</h5>
+                    <span class="badge bg-secondary rounded-pill">${l.date}</span>
+                </div>
+                <div class="text-muted small mb-3">🎯 Program: ${l.program}</div>
+
+                <div class="mb-2"><span class="workout-badge badge-warmup">🔥 Warm Up</span></div>
+                <div class="ps-2 text-secondary mb-3">${warmupHtml || "<span class='text-muted small'>No warm up entries.</span>"}</div>
+                
+                <div class="mb-2"><span class="workout-badge badge-strength">💪 Strength Training</span></div>
+                <div class="ps-2 text-secondary mb-3">${strengthHtml || "<span class='text-muted small'>No strength entries.</span>"}</div>
+                
+                <div class="mb-2"><span class="workout-badge badge-cardio">🏃‍♂️ Cardio Training</span></div>
+                <div class="ps-2 text-secondary mb-3">${cardioHtml || "<span class='text-muted small'>No cardio entries.</span>"}</div>
+                
+                <div class="border-top pt-2 d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-primary px-3 fw-bold" onclick="triggerEditLog(${i})">✏️ Edit</button>
+                    <button class="btn btn-sm btn-outline-danger px-3 fw-bold" onclick="triggerDeleteLog(${i})">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>`;
+    }
+    document.getElementById('workoutLogsAccordion').innerHTML = html || "<div class='text-center text-muted small mt-3'>No records found.</div>";
+}
+
+function renderTraineeLogs(traineeName) {
+    let logs = getDB('workoutLogs');
+    let html = "";
+    for(let i = logs.length - 1; i >= 0; i--) {
+        let l = logs[i];
+        if(l.trainee !== traineeName) continue;
+
+        let warmupHtml = "";
+        (l.warmup || []).forEach(w => { 
+            let bodyBadge = w.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${w.bodyPart}]</span>` : '';
+            warmupHtml += `<div>• ${bodyBadge}<strong>${w.activity}</strong> | ${w.time} | ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
+        });
+
+        let strengthHtml = "";
+        (l.strength || []).forEach(s => { 
+            let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
+            strengthHtml += `<div>• ${bodyBadge}<strong>${s.exercise}</strong> | Time: ${s.time || '-'} | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+        });
+
+        let cardioHtml = "";
+        (l.cardio || []).forEach(c => { 
+            let bodyBadge = c.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${c.bodyPart}]</span>` : '';
+            cardioHtml += `<div>• ${bodyBadge}<strong>${c.activity}</strong> | Time: ${c.time} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
+        });
+
+        html += `
+        <div class="card card-custom p-3 bg-white mb-2">
+            <div class="d-flex justify-content-between border-bottom pb-2 mb-2"><span class="fw-bold text-success">Workout Log</span><span class="text-secondary small fw-medium">${l.date}</span></div>
+            <p class="mb-2 small"><strong>Program:</strong> ${l.program}</p>
+            
+            <div class="bg-light p-2 rounded small mb-2">
+                <span class="fw-bold text-warning d-block mb-1" style="font-size:11px;">WARM UP</span>
+                ${warmupHtml || "None"}
+            </div>
+            <div class="bg-light p-2 rounded small mb-2">
+                <span class="fw-bold text-primary d-block mb-1" style="font-size:11px;">STRENGTH</span>
+                ${strengthHtml || "None"}
+            </div>
+            <div class="bg-light p-2 rounded small">
+                <span class="fw-bold text-success d-block mb-1" style="font-size:11px;">CARDIO</span>
+                ${cardioHtml || "None"}
+            </div>
+        </div>`;
+    }
+    document.getElementById('traineeLogsArea').innerHTML = html || "<div class='p-3 text-center text-muted small'>No workouts assigned yet.</div>";
+}
+
+document.getElementById('logDate').valueAsDate = new Date();
 </script>
 
 </body>
