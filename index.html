@@ -11,19 +11,21 @@
         .app-screen { display: none; } 
         .active-screen { display: block; } 
         
+        /* Latest Commit Timestamp Badge Styling */
         .commit-stamp {
-            background-color: #0284c7;
-            color: #ffffff;
-            font-size: 12px;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            border: 1px dashed #0284c7;
+            font-size: 11px;
             font-weight: 700;
             border-radius: 6px;
-            padding: 8px 12px;
+            padding: 6px 10px;
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
             letter-spacing: 0.5px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
+        /* Fixed Header Layout */
         .dashboard-header {
             display: flex;
             justify-content: space-between;
@@ -38,6 +40,7 @@
         .header-btn-group { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
         .btn-header-action { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 8px; white-space: nowrap; }
 
+        /* Centered Menu Buttons */
         .btn-stacked-action {
             width: 100%;
             display: flex;
@@ -56,6 +59,7 @@
         }
         .btn-stacked-action:hover { opacity: 0.95; }
 
+        /* 3D Glass Box Icons */
         .icon-3d-box {
             background: rgba(255, 255, 255, 0.22);
             backdrop-filter: blur(10px);
@@ -82,6 +86,7 @@
 
         .btn-label-centered { letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.15); pointer-events: none; }
         
+        /* Logsheet Sections Styling */
         .section-header-orange { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
         .section-header-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
         .section-header-green { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
@@ -89,6 +94,11 @@
         .log-row-container { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
         .log-row { margin-bottom: 6px; }
         .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
+        
+        .accordion-button-custom {
+            background-color: #ffffff; color: #1e293b; font-weight: 600; border-radius: 10px !important; border: 1px solid #e2e8f0;
+        }
+        .accordion-button-custom:not(.collapsed) { background-color: #f8fafc; color: #2563eb; border-bottom: 1px dashed #cbd5e1; box-shadow: none; }
         
         .workout-badge { font-size: 11px; padding: 3px 6px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 4px; margin-bottom: 2px; }
         .badge-warmup { background-color: #fff7ed; color: #c2410c; }
@@ -117,8 +127,9 @@
 
     <div id="loginScreen" class="app-screen active-screen">
         <div class="card card-custom p-4 bg-white text-center">
+            
             <div class="commit-stamp">
-                ⏱️ LAST UPDATED: 24-JUL-2026 12:42 PM
+                ⏱️ LATEST COMMIT: 24-JUL-2026 12:20 PM
             </div>
 
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
@@ -140,10 +151,6 @@
     </div>
 
     <div id="trainerDashboard" class="app-screen">
-        <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 12:42 PM
-        </div>
-        
         <div class="dashboard-header">
             <div class="header-title-section">
                 <h6 class="fw-bold mb-0 text-dark" id="trainerWelcome">👋 Welcome Trainer</h6>
@@ -163,7 +170,7 @@
 
             <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #ea580c, #c2410c);" onclick="showScreen('configureActivitiesScreen')">
                 <div class="icon-3d-box"><span class="icon-3d-text">⚙️</span></div>
-                <span class="btn-label-centered">Configure Master Exercises & Programs</span>
+                <span class="btn-label-centered">Configure Master Exercises</span>
             </button>
             
             <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #22c55e, #15803d);" onclick="openAddLogBlank()">
@@ -210,32 +217,12 @@
 
     <div id="configureActivitiesScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-            <h5 class="fw-bold mb-0">⚙️ Master Exercise & Program Setup</h5>
+            <h5 class="fw-bold mb-0">⚙️ Master Exercises Setup</h5>
             <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
         </div>
 
-        <div class="card card-custom p-3 bg-white mb-3 border-start border-4 border-primary">
-            <h6 class="fw-bold text-primary mb-3">🎯 Add Master Workout Program</h6>
-            <form onsubmit="saveGlobalProgram(event)">
-                <div class="mb-3">
-                    <label class="small fw-semibold text-secondary">PROGRAM NAME</label>
-                    <input type="text" id="progName" class="form-control form-control-sm" placeholder="e.g., Full Body Sync, Leg Day, Chest & Bicep" required>
-                </div>
-                <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">ADD TO MASTER PROGRAM LIST</button>
-            </form>
-
-            <div class="mt-3">
-                <label class="small fw-semibold text-secondary mb-1">PROGRAM CATALOG</label>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover align-middle mb-0" style="font-size: 13px;">
-                        <tbody id="programCatalogTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="card card-custom p-3 bg-white mb-3 border-start border-4 border-warning">
-            <h6 class="fw-bold text-orange mb-3" style="color:#ea580c;">💪 Add Global Exercise / Activity</h6>
+        <div class="card card-custom p-3 bg-white mb-3">
+            <h6 class="fw-bold text-orange mb-3" style="color:#ea580c;">Add Global Exercise / Activity</h6>
             <form onsubmit="saveGlobalActivity(event)">
                 <div class="mb-2">
                     <label class="small fw-semibold text-secondary">WORKOUT CATEGORY</label>
@@ -249,17 +236,17 @@
                     <label class="small fw-semibold text-secondary">ACTIVITY / EXERCISE NAME</label>
                     <input type="text" id="actName" class="form-control form-control-sm" placeholder="e.g., Stretching, Treadmill, Leg Curl" required>
                 </div>
-                <button type="submit" class="btn btn-sm btn-warning w-100 fw-bold text-white" style="background-color:#ea580c; border:none;">ADD TO MASTER EXERCISE LIST</button>
+                <button type="submit" class="btn btn-sm btn-warning w-100 fw-bold text-white" style="background-color:#ea580c; border:none;">ADD TO MASTER LIST</button>
             </form>
+        </div>
 
-            <div class="mt-3">
-                <label class="small fw-semibold text-secondary mb-1">EXERCISE CATALOG</label>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover align-middle mb-0" style="font-size: 13px;">
-                        <thead><tr><th>Cat.</th><th>Exercise Name</th><th class="text-end">Action</th></tr></thead>
-                        <tbody id="activityCatalogTableBody"></tbody>
-                    </table>
-                </div>
+        <div class="card card-custom p-3 bg-white">
+            <h6 class="fw-bold mb-2 text-secondary">Configured Exercise Catalog</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 13px;">
+                    <thead><tr><th>Cat.</th><th>Exercise Name</th><th class="text-end">Action</th></tr></thead>
+                    <tbody id="activityCatalogTableBody"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -283,9 +270,13 @@
                     <input type="date" id="logDate" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold text-secondary small">WORKOUT PROGRAM FOR THE DAY (LOADED FROM MASTER)</label>
+                    <label class="form-label fw-semibold text-secondary small">WORKOUT PROGRAM FOR THE DAY</label>
                     <select id="logProgram" class="form-select" required>
-                        <option value="">-- Select Master Program --</option>
+                        <option value="Full Body Sync">Full Body Sync</option>
+                        <option value="Leg Day">Leg Day</option>
+                        <option value="Push Day (Chest/Shoulder/Triceps)">Push Day (Chest/Shoulder/Triceps)</option>
+                        <option value="Pull Day (Back/Biceps)">Pull Day (Back/Biceps)</option>
+                        <option value="Core & Cardio Focus">Core & Cardio Focus</option>
                     </select>
                 </div>
 
@@ -332,10 +323,6 @@
     </div>
 
     <div id="traineeDashboard" class="app-screen">
-        <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 12:42 PM
-        </div>
-
         <div class="dashboard-header">
             <div class="header-title-section">
                 <h6 class="fw-bold mb-0 text-dark" id="clientWelcome">👋 Welcome</h6>
@@ -386,18 +373,9 @@ const defaultActivities = [
     { category: 'cardio', name: 'Rowing Machine' }
 ];
 
-const defaultPrograms = [
-    "Full Body Sync",
-    "Leg Day",
-    "Push Day (Chest/Shoulder/Triceps)",
-    "Pull Day (Back/Biceps)",
-    "Core & Cardio Focus"
-];
-
 if(!localStorage.getItem('trainees')) localStorage.setItem('trainees', JSON.stringify([]));
 if(!localStorage.getItem('workoutLogs')) localStorage.setItem('workoutLogs', JSON.stringify([]));
 if(!localStorage.getItem('masterActivities')) localStorage.setItem('masterActivities', JSON.stringify(defaultActivities));
-if(!localStorage.getItem('masterPrograms')) localStorage.setItem('masterPrograms', JSON.stringify(defaultPrograms));
 if(!localStorage.getItem('trainerPassword')) localStorage.setItem('trainerPassword', 'trainer123');
 
 let currentLoggedInClientUsername = ""; 
@@ -412,8 +390,8 @@ function showScreen(screenId) {
     window.scrollTo(0, 0);
     
     if(screenId === 'manageTraineesScreen') renderTrainees();
-    if(screenId === 'configureActivitiesScreen') { renderActivityCatalog(); renderProgramCatalog(); }
-    if(screenId === 'addLogScreen' || screenId === 'viewLogsScreen') { populateTraineeDropdowns(); populateProgramDropdown(); }
+    if(screenId === 'configureActivitiesScreen') renderActivityCatalog();
+    if(screenId === 'addLogScreen' || screenId === 'viewLogsScreen') populateTraineeDropdowns();
 }
 
 function handleLogin(event) {
@@ -515,49 +493,6 @@ function deleteTrainee(index) {
     }
 }
 
-/* MASTER PROGRAM LOGIC */
-function saveGlobalProgram(e) {
-    e.preventDefault();
-    let programs = getDB('masterPrograms');
-    let name = document.getElementById('progName').value.trim();
-    if(name && !programs.includes(name)) {
-        programs.push(name);
-        saveDB('masterPrograms', programs);
-        alert('Program added to Master List successfully!');
-        e.target.reset();
-        renderProgramCatalog();
-    } else {
-        alert('Program already exists or invalid!');
-    }
-}
-
-function renderProgramCatalog() {
-    let programs = getDB('masterPrograms');
-    let html = "";
-    programs.forEach((p, index) => {
-        html += `<tr><td>🎯 <strong>${p}</strong></td><td class="text-end"><button class="btn btn-xs btn-danger py-0 px-2 rounded" style="font-size:11px;" onclick="deleteGlobalProgram(${index})">X</button></td></tr>`;
-    });
-    document.getElementById('programCatalogTableBody').innerHTML = html || "<tr><td colspan='2' class='text-center text-muted'>No Master Programs.</td></tr>";
-}
-
-function deleteGlobalProgram(index) {
-    if(confirm("Remove program from master list?")) {
-        let programs = getDB('masterPrograms');
-        programs.splice(index, 1);
-        saveDB('masterPrograms', programs);
-        renderProgramCatalog();
-    }
-}
-
-function populateProgramDropdown() {
-    let programs = getDB('masterPrograms');
-    let options = '<option value="">-- Select Master Program --</option>';
-    programs.forEach(p => {
-        options += `<option value="${p}">${p}</option>`;
-    });
-    if(document.getElementById('logProgram')) document.getElementById('logProgram').innerHTML = options;
-}
-
 function saveGlobalActivity(e) {
     e.preventDefault();
     let master = getDB('masterActivities');
@@ -612,6 +547,25 @@ function getCategoryDropdownOptions(category) {
     return options;
 }
 
+// DROPDOWN SELECTORS
+function getWeightOptions() {
+    let opts = '<option value="0">0 kg</option>';
+    for(let i=5; i<=150; i+=5) {
+        opts += `<option value="${i}">${i} kg</option>`;
+        opts += `<option value="${i},${i+2},${i+5}">${i},${i+2},${i+5} kg</option>`;
+    }
+    return opts;
+}
+
+function getRepsOptions() {
+    let opts = '';
+    for(let i=1; i<=30; i++) {
+        opts += `<option value="${i}">${i} Reps</option>`;
+        opts += `<option value="${i},${i},${i}">${i},${i},${i} Reps</option>`;
+    }
+    return opts;
+}
+
 function getTimeOptions() {
     let opts = '';
     for(let i=5; i<=60; i+=5) {
@@ -640,7 +594,7 @@ function openAddLogBlank() {
     document.getElementById('strengthSection').innerHTML = "";
     document.getElementById('cardioSection').innerHTML = "";
     if(document.getElementById('logTraineeSelect')) document.getElementById('logTraineeSelect').value = "";
-    populateProgramDropdown();
+    document.getElementById('logProgram').value = "Leg Day";
     document.getElementById('logDate').valueAsDate = new Date();
     showScreen('addLogScreen');
 }
@@ -689,7 +643,7 @@ function addWarmupRow(valBody = "General", valAct = "", valTime = "", valInt = "
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-function addStrengthRow(valBody = "Leg", valAct = "", valTime = "", valInt = "", valNotes = "") {
+function addStrengthRow(valBody = "Leg", valAct = "", valWt = "", valReps = "", valNotes = "") {
     const section = document.getElementById('strengthSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
@@ -709,16 +663,12 @@ function addStrengthRow(valBody = "Leg", valAct = "", valTime = "", valInt = "",
         </div>
         <div class="row g-1 align-items-center">
             <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">TIME</label>
-                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
+                <label class="small text-muted" style="font-size:10px;">WEIGHT (KG)</label>
+                <select class="form-select form-select-sm wt-input">${getWeightOptions()}</select>
             </div>
             <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
-                <select class="form-select form-select-sm int-input">
-                    <option value="Low">Low</option>
-                    <option value="Medium" selected>Medium</option>
-                    <option value="High">High</option>
-                </select>
+                <label class="small text-muted" style="font-size:10px;">REPS / SETS</label>
+                <select class="form-select form-select-sm rep-input">${getRepsOptions()}</select>
             </div>
         </div>
         <div class="row mt-1">
@@ -728,8 +678,8 @@ function addStrengthRow(valBody = "Leg", valAct = "", valTime = "", valInt = "",
     section.appendChild(container);
     if(valBody) container.querySelector('.bodypart-input').value = valBody;
     if(valAct) container.querySelector('.act-input').value = valAct;
-    if(valTime) container.querySelector('.time-input').value = valTime;
-    if(valInt) container.querySelector('.int-input').value = valInt;
+    if(valWt) container.querySelector('.wt-input').value = valWt;
+    if(valReps) container.querySelector('.rep-input').value = valReps;
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
@@ -800,8 +750,8 @@ function saveWorkoutLog(e) {
         strengthData.push({
             bodyPart: row.querySelector('.bodypart-input').value,
             exercise: row.querySelector('.act-input').value,
-            time: row.querySelector('.time-input').value,
-            intensity: row.querySelector('.int-input').value,
+            weight: row.querySelector('.wt-input').value,
+            reps: row.querySelector('.rep-input').value,
             notes: row.querySelector('.notes-input').value
         });
     });
@@ -848,7 +798,6 @@ function triggerEditLog(index) {
 
     showScreen('addLogScreen');
     populateTraineeDropdowns();
-    populateProgramDropdown();
 
     document.getElementById('editLogIndex').value = index;
     document.getElementById('logScreenTitle').innerText = "✏️ Edit Workout Log";
@@ -862,7 +811,7 @@ function triggerEditLog(index) {
     (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.activity, w.time, w.intensity, w.notes));
 
     document.getElementById('strengthSection').innerHTML = "";
-    (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.exercise, s.time || "", s.intensity || "", s.notes));
+    (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.exercise, s.weight, s.reps, s.notes));
 
     document.getElementById('cardioSection').innerHTML = "";
     (log.cardio || []).forEach(c => addCardioRow(c.bodyPart, c.activity, c.time, c.intensity, c.notes));
@@ -896,7 +845,7 @@ function searchLogs() {
         let strengthHtml = "";
         (l.strength || []).forEach(s => { 
             let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
-            strengthHtml += `<div class="mb-1">• ${bodyBadge}<strong>${s.exercise}</strong> | Time: ${s.time || '-'} | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            strengthHtml += `<div class="mb-1">• ${bodyBadge}<strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         let cardioHtml = "";
@@ -949,7 +898,7 @@ function renderTraineeLogs(traineeName) {
         let strengthHtml = "";
         (l.strength || []).forEach(s => { 
             let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
-            strengthHtml += `<div>• ${bodyBadge}<strong>${s.exercise}</strong> | Time: ${s.time || '-'} | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            strengthHtml += `<div>• ${bodyBadge}<strong>${s.exercise}</strong> | Weight: ${s.weight} | Reps: ${s.reps} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         let cardioHtml = "";
