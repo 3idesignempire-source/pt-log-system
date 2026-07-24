@@ -139,7 +139,7 @@
     <div id="loginScreen" class="app-screen active-screen">
         <div class="card card-custom p-4 bg-white text-center">
             <div class="commit-stamp">
-                ⏱️ LAST UPDATED: 24-JUL-2026 01:05 PM
+                ⏱️ LAST UPDATED: 24-JUL-2026 01:10 PM
             </div>
 
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
@@ -163,7 +163,7 @@
     <!-- ================= 2. TRAINER DASHBOARD ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 01:05 PM
+            ⏱️ LAST UPDATED: 24-JUL-2026 01:10 PM
         </div>
         
         <div class="dashboard-header">
@@ -183,9 +183,10 @@
                 <span class="btn-label-centered">Register / Manage Trainee</span>
             </button>
 
+            <!-- LABEL UPDATED TO "Configuration" -->
             <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #ea580c, #c2410c);" onclick="showScreen('configureActivitiesScreen')">
                 <div class="icon-3d-box"><span class="icon-3d-text">⚙️</span></div>
-                <span class="btn-label-centered">Configure Master Exercises & Programs</span>
+                <span class="btn-label-centered">Configuration</span>
             </button>
             
             <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #22c55e, #15803d);" onclick="openAddLogBlank()">
@@ -231,10 +232,10 @@
         </div>
     </div>
 
-    <!-- ================= 4. CONFIGURE MASTER (2 SECTIONS WITH TOP BUTTONS) ================= -->
+    <!-- ================= 4. CONFIGURE MASTER (2 SECTIONS WITH TOGGLE BUTTONS) ================= -->
     <div id="configureActivitiesScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-            <h5 class="fw-bold mb-0">⚙️ Master Setup</h5>
+            <h5 class="fw-bold mb-0">⚙️ Configuration</h5>
             <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
         </div>
 
@@ -375,7 +376,7 @@
     <!-- ================= 7. TRAINEE DASHBOARD ================= -->
     <div id="traineeDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 01:05 PM
+            ⏱️ LAST UPDATED: 24-JUL-2026 01:10 PM
         </div>
 
         <div class="dashboard-header">
@@ -460,7 +461,6 @@ function showScreen(screenId) {
     if(screenId === 'addLogScreen' || screenId === 'viewLogsScreen') { populateTraineeDropdowns(); populateProgramDropdown(); }
 }
 
-/* SECTION SWITCHER FOR CONFIG SCREEN */
 function switchConfigTab(tab) {
     if(tab === 'exercises') {
         document.getElementById('secConfigExercises').style.display = 'block';
@@ -574,7 +574,6 @@ function deleteTrainee(index) {
     }
 }
 
-/* MASTER PROGRAM LOGIC */
 function saveGlobalProgram(e) {
     e.preventDefault();
     let programs = getDB('masterPrograms');
