@@ -138,7 +138,7 @@
     <div id="loginScreen" class="app-screen active-screen">
         <div class="card card-custom p-4 bg-white text-center">
             <div class="commit-stamp">
-                ⏱️ LAST UPDATED: 24-JUL-2026 03:28 PM
+                ⏱️ LAST UPDATED: 24-JUL-2026 03:30 PM
             </div>
 
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
@@ -162,7 +162,7 @@
     <!-- ================= 2. TRAINER DASHBOARD ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 03:28 PM
+            ⏱️ LAST UPDATED: 24-JUL-2026 03:30 PM
         </div>
         
         <div class="dashboard-header">
@@ -322,21 +322,21 @@
                     </select>
                 </div>
 
-                <!-- 1. WARM UP SECTION (REPS INSTEAD OF TIME) -->
+                <!-- 1. WARM UP SECTION -->
                 <div class="d-flex justify-content-between align-items-center section-header-orange mb-2">
                     <span>WARM UP</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addWarmupRow()">+ Add</button>
                 </div>
                 <div id="warmupSection" class="mb-3"></div>
 
-                <!-- 2. STRENGTH TRAINING SECTION (REPS INSTEAD OF TIME) -->
+                <!-- 2. STRENGTH TRAINING SECTION -->
                 <div class="d-flex justify-content-between align-items-center section-header-blue mb-2">
                     <span>STRENGTH TRAINING</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addStrengthRow()">+ Add</button>
                 </div>
                 <div id="strengthSection" class="mb-3"></div>
 
-                <!-- 3. CARDIO TRAINING SECTION (REPS INSTEAD OF TIME) -->
+                <!-- 3. CARDIO TRAINING SECTION -->
                 <div class="d-flex justify-content-between align-items-center section-header-green mb-2">
                     <span>CARDIO TRAINING</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addCardioRow()">+ Add</button>
@@ -371,7 +371,7 @@
     <!-- ================= 7. TRAINEE DASHBOARD ================= -->
     <div id="traineeDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 03:28 PM
+            ⏱️ LAST UPDATED: 24-JUL-2026 03:30 PM
         </div>
 
         <div class="dashboard-header">
@@ -655,24 +655,6 @@ function populateTraineeDropdowns() {
     if(document.getElementById('searchTraineeSelect')) document.getElementById('searchTraineeSelect').innerHTML = searchOptions;
 }
 
-function getCategoryDropdownOptions(category) {
-    let master = getDB('masterActivities');
-    let targetCat = category.toLowerCase();
-    let filtered = master.filter(a => a.category.toLowerCase() === targetCat);
-    
-    let options = '<option value="">-- Select Exercise --</option>';
-    if(filtered.length > 0) {
-        filtered.forEach(a => {
-            options += `<option value="${a.name}">${a.name}</option>`;
-        });
-    } else {
-        master.forEach(a => {
-            options += `<option value="${a.name}">${a.name}</option>`;
-        });
-    }
-    return options;
-}
-
 /* REPS DROPDOWN OPTIONS (1 to 30 REPS) */
 function getRepsOptions() {
     let opts = '';
@@ -707,22 +689,17 @@ function openAddLogBlank() {
     showScreen('addLogScreen');
 }
 
-/* WARMUP ROW UPDATED WITH REPS INSTEAD OF TIME */
-function addWarmupRow(valBody = "General", valAct = "", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
+/* WARMUP ROW (SAME AS STRENGTH: BODY PART, REPS, INTENSITY, REMARKS) */
+function addWarmupRow(valBody = "General", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('warmupSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
-    let dropdownHtml = getCategoryDropdownOptions('warmup');
     
     container.innerHTML = `
         <div class="row g-1 log-row align-items-center mb-1">
-            <div class="col-5">
+            <div class="col-11">
                 <label class="small text-muted" style="font-size:10px;">BODY PART</label>
                 <select class="form-select form-select-sm bodypart-input" required>${getBodyPartDropdown()}</select>
-            </div>
-            <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">EXERCISE</label>
-                <select class="form-select form-select-sm act-input" required>${dropdownHtml}</select>
             </div>
             <div class="col-1 text-end pt-3"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
         </div>
@@ -746,13 +723,12 @@ function addWarmupRow(valBody = "General", valAct = "", valReps = "10 Reps", val
     `;
     section.appendChild(container);
     if(valBody) container.querySelector('.bodypart-input').value = valBody;
-    if(valAct) container.querySelector('.act-input').value = valAct;
     if(valReps) container.querySelector('.reps-input').value = valReps;
     if(valInt) container.querySelector('.int-input').value = valInt;
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-/* STRENGTH ROW (NO EXERCISE DROPDOWN, REPS & INTENSITY) */
+/* STRENGTH ROW (BODY PART, REPS, INTENSITY, REMARKS) */
 function addStrengthRow(valBody = "Leg", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('strengthSection');
     const container = document.createElement('div');
@@ -791,22 +767,17 @@ function addStrengthRow(valBody = "Leg", valReps = "10 Reps", valInt = "Medium",
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-/* CARDIO ROW UPDATED WITH REPS INSTEAD OF TIME */
-function addCardioRow(valBody = "General", valAct = "", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
+/* CARDIO ROW (SAME AS STRENGTH: BODY PART, REPS, INTENSITY, REMARKS) */
+function addCardioRow(valBody = "General", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('cardioSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
-    let dropdownHtml = getCategoryDropdownOptions('cardio');
     
     container.innerHTML = `
         <div class="row g-1 log-row align-items-center mb-1">
-            <div class="col-5">
+            <div class="col-11">
                 <label class="small text-muted" style="font-size:10px;">BODY PART</label>
                 <select class="form-select form-select-sm bodypart-input" required>${getBodyPartDropdown()}</select>
-            </div>
-            <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">EXERCISE</label>
-                <select class="form-select form-select-sm act-input" required>${dropdownHtml}</select>
             </div>
             <div class="col-1 text-end pt-3"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
         </div>
@@ -830,7 +801,6 @@ function addCardioRow(valBody = "General", valAct = "", valReps = "10 Reps", val
     `;
     section.appendChild(container);
     if(valBody) container.querySelector('.bodypart-input').value = valBody;
-    if(valAct) container.querySelector('.act-input').value = valAct;
     if(valReps) container.querySelector('.reps-input').value = valReps;
     if(valInt) container.querySelector('.int-input').value = valInt;
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
@@ -846,7 +816,6 @@ function saveWorkoutLog(e) {
     warmupRows.forEach(row => {
         warmupData.push({
             bodyPart: row.querySelector('.bodypart-input').value,
-            activity: row.querySelector('.act-input').value,
             reps: row.querySelector('.reps-input').value,
             intensity: row.querySelector('.int-input').value,
             notes: row.querySelector('.notes-input').value
@@ -869,7 +838,6 @@ function saveWorkoutLog(e) {
     cardioRows.forEach(row => {
         cardioData.push({
             bodyPart: row.querySelector('.bodypart-input').value,
-            activity: row.querySelector('.act-input').value,
             reps: row.querySelector('.reps-input').value,
             intensity: row.querySelector('.int-input').value,
             notes: row.querySelector('.notes-input').value
@@ -917,13 +885,13 @@ function triggerEditLog(index) {
     document.getElementById('logProgram').value = log.program;
 
     document.getElementById('warmupSection').innerHTML = "";
-    (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.activity, w.reps || "10 Reps", w.intensity, w.notes));
+    (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.reps || "10 Reps", w.intensity || "Medium", w.notes));
 
     document.getElementById('strengthSection').innerHTML = "";
     (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.reps || "10 Reps", s.intensity || "Medium", s.notes));
 
     document.getElementById('cardioSection').innerHTML = "";
-    (log.cardio || []).forEach(c => addCardioRow(c.bodyPart, c.activity, c.reps || "10 Reps", c.intensity, c.notes));
+    (log.cardio || []).forEach(c => addCardioRow(c.bodyPart, c.reps || "10 Reps", c.intensity || "Medium", c.notes));
 }
 
 function triggerDeleteLog(index) {
@@ -948,7 +916,7 @@ function searchLogs() {
         let warmupHtml = "";
         (l.warmup || []).forEach(w => { 
             let bodyBadge = w.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${w.bodyPart}]</span>` : '';
-            warmupHtml += `<div class="mb-1">• ${bodyBadge}<strong>${w.activity}</strong> | Reps: ${w.reps || '-'} | Int: ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
+            warmupHtml += `<div class="mb-1">• ${bodyBadge}Reps: <strong>${w.reps || '-'}</strong> | Int: ${w.intensity || '-'} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
         });
 
         let strengthHtml = "";
@@ -960,7 +928,7 @@ function searchLogs() {
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
             let bodyBadge = c.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${c.bodyPart}]</span>` : '';
-            cardioHtml += `<div class="mb-1">• ${bodyBadge}<strong>${c.activity}</strong> | Reps: ${c.reps || '-'} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
+            cardioHtml += `<div class="mb-1">• ${bodyBadge}Reps: <strong>${c.reps || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
         html += `
@@ -1001,7 +969,7 @@ function renderTraineeLogs(traineeName) {
         let warmupHtml = "";
         (l.warmup || []).forEach(w => { 
             let bodyBadge = w.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${w.bodyPart}]</span>` : '';
-            warmupHtml += `<div>• ${bodyBadge}<strong>${w.activity}</strong> | Reps: ${w.reps || '-'} | ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
+            warmupHtml += `<div>• ${bodyBadge}Reps: <strong>${w.reps || '-'}</strong> | Int: ${w.intensity || '-'} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
         });
 
         let strengthHtml = "";
@@ -1013,7 +981,7 @@ function renderTraineeLogs(traineeName) {
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
             let bodyBadge = c.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${c.bodyPart}]</span>` : '';
-            cardioHtml += `<div>• ${bodyBadge}<strong>${c.activity}</strong> | Reps: ${c.reps || '-'} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
+            cardioHtml += `<div>• ${bodyBadge}Reps: <strong>${c.reps || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
         html += `
