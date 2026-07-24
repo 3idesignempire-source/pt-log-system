@@ -138,7 +138,7 @@
     <div id="loginScreen" class="app-screen active-screen">
         <div class="card card-custom p-4 bg-white text-center">
             <div class="commit-stamp">
-                ⏱️ LAST UPDATED: 24-JUL-2026 03:25 PM
+                ⏱️ LAST UPDATED: 24-JUL-2026 03:28 PM
             </div>
 
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
@@ -162,7 +162,7 @@
     <!-- ================= 2. TRAINER DASHBOARD ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 03:25 PM
+            ⏱️ LAST UPDATED: 24-JUL-2026 03:28 PM
         </div>
         
         <div class="dashboard-header">
@@ -322,21 +322,21 @@
                     </select>
                 </div>
 
-                <!-- 1. WARM UP SECTION -->
+                <!-- 1. WARM UP SECTION (REPS INSTEAD OF TIME) -->
                 <div class="d-flex justify-content-between align-items-center section-header-orange mb-2">
                     <span>WARM UP</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addWarmupRow()">+ Add</button>
                 </div>
                 <div id="warmupSection" class="mb-3"></div>
 
-                <!-- 2. STRENGTH TRAINING SECTION (REMOVED EXERCISE DROPDOWN, REPLACED TIME WITH REPS) -->
+                <!-- 2. STRENGTH TRAINING SECTION (REPS INSTEAD OF TIME) -->
                 <div class="d-flex justify-content-between align-items-center section-header-blue mb-2">
                     <span>STRENGTH TRAINING</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addStrengthRow()">+ Add</button>
                 </div>
                 <div id="strengthSection" class="mb-3"></div>
 
-                <!-- 3. CARDIO TRAINING SECTION -->
+                <!-- 3. CARDIO TRAINING SECTION (REPS INSTEAD OF TIME) -->
                 <div class="d-flex justify-content-between align-items-center section-header-green mb-2">
                     <span>CARDIO TRAINING</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addCardioRow()">+ Add</button>
@@ -371,7 +371,7 @@
     <!-- ================= 7. TRAINEE DASHBOARD ================= -->
     <div id="traineeDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 03:25 PM
+            ⏱️ LAST UPDATED: 24-JUL-2026 03:28 PM
         </div>
 
         <div class="dashboard-header">
@@ -673,14 +673,6 @@ function getCategoryDropdownOptions(category) {
     return options;
 }
 
-function getTimeOptions() {
-    let opts = '';
-    for(let i=5; i<=60; i+=5) {
-        opts += `<option value="${i} Mins">${i} Mins</option>`;
-    }
-    return opts;
-}
-
 /* REPS DROPDOWN OPTIONS (1 to 30 REPS) */
 function getRepsOptions() {
     let opts = '';
@@ -715,7 +707,8 @@ function openAddLogBlank() {
     showScreen('addLogScreen');
 }
 
-function addWarmupRow(valBody = "General", valAct = "", valTime = "", valInt = "", valNotes = "") {
+/* WARMUP ROW UPDATED WITH REPS INSTEAD OF TIME */
+function addWarmupRow(valBody = "General", valAct = "", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('warmupSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
@@ -735,8 +728,8 @@ function addWarmupRow(valBody = "General", valAct = "", valTime = "", valInt = "
         </div>
         <div class="row g-1 align-items-center">
             <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">TIME</label>
-                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
+                <label class="small text-muted" style="font-size:10px;">REPS</label>
+                <select class="form-select form-select-sm reps-input">${getRepsOptions()}</select>
             </div>
             <div class="col-6">
                 <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
@@ -754,12 +747,12 @@ function addWarmupRow(valBody = "General", valAct = "", valTime = "", valInt = "
     section.appendChild(container);
     if(valBody) container.querySelector('.bodypart-input').value = valBody;
     if(valAct) container.querySelector('.act-input').value = valAct;
-    if(valTime) container.querySelector('.time-input').value = valTime;
+    if(valReps) container.querySelector('.reps-input').value = valReps;
     if(valInt) container.querySelector('.int-input').value = valInt;
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-/* STRENGTH ROW UPDATED AS PER TAMBI AUDIO: NO EXERCISE DROPDOWN, REPLACED TIME WITH REPS */
+/* STRENGTH ROW (NO EXERCISE DROPDOWN, REPS & INTENSITY) */
 function addStrengthRow(valBody = "Leg", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('strengthSection');
     const container = document.createElement('div');
@@ -798,7 +791,8 @@ function addStrengthRow(valBody = "Leg", valReps = "10 Reps", valInt = "Medium",
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-function addCardioRow(valBody = "General", valAct = "", valTime = "", valInt = "", valNotes = "") {
+/* CARDIO ROW UPDATED WITH REPS INSTEAD OF TIME */
+function addCardioRow(valBody = "General", valAct = "", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('cardioSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
@@ -818,8 +812,8 @@ function addCardioRow(valBody = "General", valAct = "", valTime = "", valInt = "
         </div>
         <div class="row g-1 align-items-center">
             <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">TIME</label>
-                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
+                <label class="small text-muted" style="font-size:10px;">REPS</label>
+                <select class="form-select form-select-sm reps-input">${getRepsOptions()}</select>
             </div>
             <div class="col-6">
                 <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
@@ -837,7 +831,7 @@ function addCardioRow(valBody = "General", valAct = "", valTime = "", valInt = "
     section.appendChild(container);
     if(valBody) container.querySelector('.bodypart-input').value = valBody;
     if(valAct) container.querySelector('.act-input').value = valAct;
-    if(valTime) container.querySelector('.time-input').value = valTime;
+    if(valReps) container.querySelector('.reps-input').value = valReps;
     if(valInt) container.querySelector('.int-input').value = valInt;
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
@@ -853,7 +847,7 @@ function saveWorkoutLog(e) {
         warmupData.push({
             bodyPart: row.querySelector('.bodypart-input').value,
             activity: row.querySelector('.act-input').value,
-            time: row.querySelector('.time-input').value,
+            reps: row.querySelector('.reps-input').value,
             intensity: row.querySelector('.int-input').value,
             notes: row.querySelector('.notes-input').value
         });
@@ -876,7 +870,7 @@ function saveWorkoutLog(e) {
         cardioData.push({
             bodyPart: row.querySelector('.bodypart-input').value,
             activity: row.querySelector('.act-input').value,
-            time: row.querySelector('.time-input').value,
+            reps: row.querySelector('.reps-input').value,
             intensity: row.querySelector('.int-input').value,
             notes: row.querySelector('.notes-input').value
         });
@@ -923,13 +917,13 @@ function triggerEditLog(index) {
     document.getElementById('logProgram').value = log.program;
 
     document.getElementById('warmupSection').innerHTML = "";
-    (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.activity, w.time, w.intensity, w.notes));
+    (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.activity, w.reps || "10 Reps", w.intensity, w.notes));
 
     document.getElementById('strengthSection').innerHTML = "";
     (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.reps || "10 Reps", s.intensity || "Medium", s.notes));
 
     document.getElementById('cardioSection').innerHTML = "";
-    (log.cardio || []).forEach(c => addCardioRow(c.bodyPart, c.activity, c.time, c.intensity, c.notes));
+    (log.cardio || []).forEach(c => addCardioRow(c.bodyPart, c.activity, c.reps || "10 Reps", c.intensity, c.notes));
 }
 
 function triggerDeleteLog(index) {
@@ -954,7 +948,7 @@ function searchLogs() {
         let warmupHtml = "";
         (l.warmup || []).forEach(w => { 
             let bodyBadge = w.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${w.bodyPart}]</span>` : '';
-            warmupHtml += `<div class="mb-1">• ${bodyBadge}<strong>${w.activity}</strong> | Time: ${w.time} | Int: ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
+            warmupHtml += `<div class="mb-1">• ${bodyBadge}<strong>${w.activity}</strong> | Reps: ${w.reps || '-'} | Int: ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
         });
 
         let strengthHtml = "";
@@ -966,7 +960,7 @@ function searchLogs() {
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
             let bodyBadge = c.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${c.bodyPart}]</span>` : '';
-            cardioHtml += `<div class="mb-1">• ${bodyBadge}<strong>${c.activity}</strong> | Time: ${c.time} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
+            cardioHtml += `<div class="mb-1">• ${bodyBadge}<strong>${c.activity}</strong> | Reps: ${c.reps || '-'} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
         html += `
@@ -1007,7 +1001,7 @@ function renderTraineeLogs(traineeName) {
         let warmupHtml = "";
         (l.warmup || []).forEach(w => { 
             let bodyBadge = w.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${w.bodyPart}]</span>` : '';
-            warmupHtml += `<div>• ${bodyBadge}<strong>${w.activity}</strong> | ${w.time} | ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
+            warmupHtml += `<div>• ${bodyBadge}<strong>${w.activity}</strong> | Reps: ${w.reps || '-'} | ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
         });
 
         let strengthHtml = "";
@@ -1019,7 +1013,7 @@ function renderTraineeLogs(traineeName) {
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
             let bodyBadge = c.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${c.bodyPart}]</span>` : '';
-            cardioHtml += `<div>• ${bodyBadge}<strong>${c.activity}</strong> | Time: ${c.time} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
+            cardioHtml += `<div>• ${bodyBadge}<strong>${c.activity}</strong> | Reps: ${c.reps || '-'} | Int: ${c.intensity} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
         html += `
