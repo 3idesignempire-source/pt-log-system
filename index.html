@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT Log System</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f4f6f9; font-family: -apple-system, sans-serif; }
@@ -112,7 +111,6 @@
 
 <div class="container my-4" style="max-width: 600px;">
 
-    <!-- ================= 1. LOGIN SCREEN ================= -->
     <div id="loginScreen" class="app-screen active-screen">
         <div class="card card-custom p-4 bg-white text-center">
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
@@ -133,7 +131,6 @@
         </div>
     </div>
 
-    <!-- ================= 2. TRAINER DASHBOARD ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
@@ -171,7 +168,6 @@
         </div>
     </div>
 
-    <!-- ================= 3. MANAGE TRAINEES SCREEN ================= -->
     <div id="manageTraineesScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
             <h5 class="fw-bold mb-0">👥 Manage Trainees</h5>
@@ -200,7 +196,6 @@
         </div>
     </div>
 
-    <!-- ================= 4. CONFIGURE MASTER ACTIVITIES SCREEN ================= -->
     <div id="configureActivitiesScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
             <h5 class="fw-bold mb-0">⚙️ Master Exercises Setup</h5>
@@ -213,14 +208,14 @@
                 <div class="mb-2">
                     <label class="small fw-semibold text-secondary">WORKOUT CATEGORY</label>
                     <select id="actCategory" class="form-select form-select-sm" required>
-                        <option value="strength">STRENGTH TRAINING</option>
                         <option value="warmup">WARM UP</option>
+                        <option value="strength">STRENGTH TRAINING</option>
                         <option value="cardio">CARDIO TRAINING</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label class="small fw-semibold text-secondary">ACTIVITY / EXERCISE NAME</label>
-                    <input type="text" id="actName" class="form-control form-control-sm" placeholder="e.g., Treadmill, Cycling, Elliptical" required>
+                    <input type="text" id="actName" class="form-control form-control-sm" placeholder="e.g., Stretching, Treadmill, Leg Curl" required>
                 </div>
                 <button type="submit" class="btn btn-sm btn-warning w-100 fw-bold text-white" style="background-color:#ea580c; border:none;">ADD TO MASTER LIST</button>
             </form>
@@ -237,7 +232,6 @@
         </div>
     </div>
 
-    <!-- ================= 5. ADD / EDIT WORKOUT LOG SCREEN ================= -->
     <div id="addLogScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
             <h5 class="fw-bold mb-0" id="logScreenTitle">📝 Add Workout Log</h5>
@@ -267,21 +261,18 @@
                     </select>
                 </div>
 
-                <!-- 1. WARM UP SECTION -->
                 <div class="d-flex justify-content-between align-items-center section-header-orange mb-2">
                     <span>WARM UP</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addWarmupRow()">+ Add</button>
                 </div>
                 <div id="warmupSection" class="mb-3"></div>
 
-                <!-- 2. STRENGTH TRAINING SECTION -->
                 <div class="d-flex justify-content-between align-items-center section-header-blue mb-2">
                     <span>STRENGTH TRAINING</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addStrengthRow()">+ Add</button>
                 </div>
                 <div id="strengthSection" class="mb-3"></div>
 
-                <!-- 3. CARDIO TRAINING SECTION (UPDATED TO MATCH STRENGTH WITH BODY PARTS, TIME, INTENSITY & REMARKS) -->
                 <div class="d-flex justify-content-between align-items-center section-header-green mb-2">
                     <span>CARDIO TRAINING</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addCardioRow()">+ Add</button>
@@ -293,7 +284,6 @@
         </div>
     </div>
 
-    <!-- ================= 6. VIEW, EDIT & DELETE LOGS ================= -->
     <div id="viewLogsScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
             <h5 class="fw-bold mb-0 text-dark">🔍 Search & Manage Logs</h5>
@@ -313,7 +303,6 @@
         <div class="accordion" id="workoutLogsAccordion"></div>
     </div>
 
-    <!-- ================= 7. TRAINEE DASHBOARD ================= -->
     <div id="traineeDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
@@ -330,7 +319,6 @@
 
 </div>
 
-<!-- ================= CHANGE PASSWORD MODAL ================= -->
 <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
     <div class="modal-content" style="border-radius:12px;">
@@ -350,12 +338,12 @@
   </div>
 </div>
 
-<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- SYSTEM DATA & LOGIC ENGINE -->
 <script>
 const defaultActivities = [
+    { category: 'warmup', name: 'Stretching' },
+    { category: 'warmup', name: 'Jumping Jacks' },
     { category: 'strength', name: 'Squats' },
     { category: 'strength', name: 'Leg Curl' },
     { category: 'strength', name: 'Leg Extension' },
@@ -363,8 +351,7 @@ const defaultActivities = [
     { category: 'strength', name: 'Bench Press' },
     { category: 'cardio', name: 'Treadmill Walk' },
     { category: 'cardio', name: 'Cycling' },
-    { category: 'cardio', name: 'Rowing Machine' },
-    { category: 'warmup', name: 'Stretching' }
+    { category: 'cardio', name: 'Rowing Machine' }
 ];
 
 if(!localStorage.getItem('trainees')) localStorage.setItem('trainees', JSON.stringify([]));
@@ -593,30 +580,45 @@ function openAddLogBlank() {
     showScreen('addLogScreen');
 }
 
-function addWarmupRow(valAct = "", valTime = "", valInt = "", valNotes = "") {
+/* WARM UP ROW NOW MATCHES STRENGTH & CARDIO STRUCTURE (BODY PARTS, EXERCISE, TIME, INTENSITY, REMARKS) */
+function addWarmupRow(valBody = "General", valAct = "", valTime = "", valInt = "", valNotes = "") {
     const section = document.getElementById('warmupSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
     let dropdownHtml = getCategoryDropdownOptions('warmup');
     
     container.innerHTML = `
-        <div class="row g-1 log-row align-items-center">
-            <div class="col-4"><select class="form-select form-select-sm act-input" required>${dropdownHtml}</select></div>
-            <div class="col-4"><select class="form-select form-select-sm time-input">${getTimeOptions()}</select></div>
-            <div class="col-3">
+        <div class="row g-1 log-row align-items-center mb-1">
+            <div class="col-5">
+                <label class="small text-muted" style="font-size:10px;">BODY PART</label>
+                <select class="form-select form-select-sm bodypart-input" required>${getBodyPartDropdown()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">EXERCISE / ACTIVITY</label>
+                <select class="form-select form-select-sm act-input" required>${dropdownHtml}</select>
+            </div>
+            <div class="col-1 text-end pt-3"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
+        </div>
+        <div class="row g-1 align-items-center">
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">TIME</label>
+                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
+            </div>
+            <div class="col-6">
+                <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
                 <select class="form-select form-select-sm int-input">
                     <option value="Low">Low</option>
                     <option value="Medium" selected>Medium</option>
                     <option value="High">High</option>
                 </select>
             </div>
-            <div class="col-1 text-end"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
         </div>
         <div class="row mt-1">
             <div class="col-12"><textarea class="form-control form-control-sm notes-input" rows="1" placeholder="Remarks / Notes..."></textarea></div>
         </div>
     `;
     section.appendChild(container);
+    if(valBody) container.querySelector('.bodypart-input').value = valBody;
     if(valAct) container.querySelector('.act-input').value = valAct;
     if(valTime) container.querySelector('.time-input').value = valTime;
     if(valInt) container.querySelector('.int-input').value = valInt;
@@ -663,7 +665,6 @@ function addStrengthRow(valBody = "Leg", valAct = "", valWt = "", valReps = "", 
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-/* CARDIO ROW MATCHES STRENGTH STRUCTURE (BODY PARTS, EXERCISE, TIME, INTENSITY, REMARKS) */
 function addCardioRow(valBody = "General", valAct = "", valTime = "", valInt = "", valNotes = "") {
     const section = document.getElementById('cardioSection');
     const container = document.createElement('div');
@@ -717,6 +718,7 @@ function saveWorkoutLog(e) {
     let warmupData = [];
     warmupRows.forEach(row => {
         warmupData.push({
+            bodyPart: row.querySelector('.bodypart-input').value,
             activity: row.querySelector('.act-input').value,
             time: row.querySelector('.time-input').value,
             intensity: row.querySelector('.int-input').value,
@@ -788,7 +790,7 @@ function triggerEditLog(index) {
     document.getElementById('logProgram').value = log.program;
 
     document.getElementById('warmupSection').innerHTML = "";
-    (log.warmup || []).forEach(w => addWarmupRow(w.activity, w.time, w.intensity, w.notes));
+    (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.activity, w.time, w.intensity, w.notes));
 
     document.getElementById('strengthSection').innerHTML = "";
     (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.exercise, s.weight, s.reps, s.notes));
@@ -818,7 +820,8 @@ function searchLogs() {
 
         let warmupHtml = "";
         (l.warmup || []).forEach(w => { 
-            warmupHtml += `<div class="mb-1">• <strong>${w.activity}</strong> | Time: ${w.time} | Int: ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
+            let bodyBadge = w.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${w.bodyPart}]</span>` : '';
+            warmupHtml += `<div class="mb-1">• ${bodyBadge}<strong>${w.activity}</strong> | Time: ${w.time} | Int: ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
         });
 
         let strengthHtml = "";
@@ -870,7 +873,8 @@ function renderTraineeLogs(traineeName) {
 
         let warmupHtml = "";
         (l.warmup || []).forEach(w => { 
-            warmupHtml += `<div>• <strong>${w.activity}</strong> | ${w.time} | ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
+            let bodyBadge = w.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${w.bodyPart}]</span>` : '';
+            warmupHtml += `<div>• ${bodyBadge}<strong>${w.activity}</strong> | ${w.time} | ${w.intensity} ${w.notes ? `<div class="pin-note-box">📌 ${w.notes}</div>` : ''}</div>`; 
         });
 
         let strengthHtml = "";
