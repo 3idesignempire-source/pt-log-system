@@ -109,7 +109,6 @@
             gap: 6px;
         }
 
-        /* TOGGLE BUTTONS STYLING */
         .tab-btn {
             flex: 1;
             font-weight: 700;
@@ -139,7 +138,7 @@
     <div id="loginScreen" class="app-screen active-screen">
         <div class="card card-custom p-4 bg-white text-center">
             <div class="commit-stamp">
-                ⏱️ LAST UPDATED: 24-JUL-2026 01:10 PM
+                ⏱️ LAST UPDATED: 24-JUL-2026 03:25 PM
             </div>
 
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
@@ -163,7 +162,7 @@
     <!-- ================= 2. TRAINER DASHBOARD ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 01:10 PM
+            ⏱️ LAST UPDATED: 24-JUL-2026 03:25 PM
         </div>
         
         <div class="dashboard-header">
@@ -183,7 +182,6 @@
                 <span class="btn-label-centered">Register / Manage Trainee</span>
             </button>
 
-            <!-- LABEL UPDATED TO "Configuration" -->
             <button type="button" class="btn btn-stacked-action" style="background: linear-gradient(135deg, #ea580c, #c2410c);" onclick="showScreen('configureActivitiesScreen')">
                 <div class="icon-3d-box"><span class="icon-3d-text">⚙️</span></div>
                 <span class="btn-label-centered">Configuration</span>
@@ -232,20 +230,18 @@
         </div>
     </div>
 
-    <!-- ================= 4. CONFIGURE MASTER (2 SECTIONS WITH TOGGLE BUTTONS) ================= -->
+    <!-- ================= 4. CONFIGURE MASTER ================= -->
     <div id="configureActivitiesScreen" class="app-screen">
         <div class="d-flex justify-content-between align-items-center mb-3 px-1">
             <h5 class="fw-bold mb-0">⚙️ Configuration</h5>
             <button class="btn btn-sm btn-secondary" onclick="showScreen('trainerDashboard')">Back</button>
         </div>
 
-        <!-- TWO SECTION SWITCHER BUTTONS -->
         <div class="d-flex gap-2 mb-3">
             <button class="tab-btn active" id="btnTabExercises" onclick="switchConfigTab('exercises')">💪 Exercises</button>
             <button class="tab-btn" id="btnTabPrograms" onclick="switchConfigTab('programs')">🎯 Programs</button>
         </div>
 
-        <!-- SECTION 1: CONFIGURE EXERCISES -->
         <div id="secConfigExercises">
             <div class="card card-custom p-3 bg-white mb-3 border-start border-4 border-warning">
                 <h6 class="fw-bold text-orange mb-3" style="color:#ea580c;">💪 Add Global Exercise</h6>
@@ -277,7 +273,6 @@
             </div>
         </div>
 
-        <!-- SECTION 2: CONFIGURE MASTER PROGRAMS -->
         <div id="secConfigPrograms" style="display: none;">
             <div class="card card-custom p-3 bg-white mb-3 border-start border-4 border-primary">
                 <h6 class="fw-bold text-primary mb-3">🎯 Add Master Workout Program</h6>
@@ -334,7 +329,7 @@
                 </div>
                 <div id="warmupSection" class="mb-3"></div>
 
-                <!-- 2. STRENGTH TRAINING SECTION -->
+                <!-- 2. STRENGTH TRAINING SECTION (REMOVED EXERCISE DROPDOWN, REPLACED TIME WITH REPS) -->
                 <div class="d-flex justify-content-between align-items-center section-header-blue mb-2">
                     <span>STRENGTH TRAINING</span>
                     <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;" onclick="addStrengthRow()">+ Add</button>
@@ -376,7 +371,7 @@
     <!-- ================= 7. TRAINEE DASHBOARD ================= -->
     <div id="traineeDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 01:10 PM
+            ⏱️ LAST UPDATED: 24-JUL-2026 03:25 PM
         </div>
 
         <div class="dashboard-header">
@@ -686,6 +681,15 @@ function getTimeOptions() {
     return opts;
 }
 
+/* REPS DROPDOWN OPTIONS (1 to 30 REPS) */
+function getRepsOptions() {
+    let opts = '';
+    for(let i=1; i<=30; i++) {
+        opts += `<option value="${i} Reps">${i} Reps</option>`;
+    }
+    return opts;
+}
+
 function getBodyPartDropdown() {
     return `
         <option value="General">General</option>
@@ -755,28 +759,24 @@ function addWarmupRow(valBody = "General", valAct = "", valTime = "", valInt = "
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-function addStrengthRow(valBody = "Leg", valAct = "", valTime = "", valInt = "", valNotes = "") {
+/* STRENGTH ROW UPDATED AS PER TAMBI AUDIO: NO EXERCISE DROPDOWN, REPLACED TIME WITH REPS */
+function addStrengthRow(valBody = "Leg", valReps = "10 Reps", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('strengthSection');
     const container = document.createElement('div');
     container.className = 'log-row-container';
-    let dropdownHtml = getCategoryDropdownOptions('strength');
     
     container.innerHTML = `
         <div class="row g-1 log-row align-items-center mb-1">
-            <div class="col-5">
+            <div class="col-11">
                 <label class="small text-muted" style="font-size:10px;">BODY PART</label>
                 <select class="form-select form-select-sm bodypart-input" required>${getBodyPartDropdown()}</select>
-            </div>
-            <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">EXERCISE</label>
-                <select class="form-select form-select-sm act-input" required>${dropdownHtml}</select>
             </div>
             <div class="col-1 text-end pt-3"><button type="button" class="btn btn-sm text-danger fw-bold py-0" onclick="this.closest('.log-row-container').remove()">X</button></div>
         </div>
         <div class="row g-1 align-items-center">
             <div class="col-6">
-                <label class="small text-muted" style="font-size:10px;">TIME</label>
-                <select class="form-select form-select-sm time-input">${getTimeOptions()}</select>
+                <label class="small text-muted" style="font-size:10px;">REPS</label>
+                <select class="form-select form-select-sm reps-input">${getRepsOptions()}</select>
             </div>
             <div class="col-6">
                 <label class="small text-muted" style="font-size:10px;">INTENSITY</label>
@@ -793,8 +793,7 @@ function addStrengthRow(valBody = "Leg", valAct = "", valTime = "", valInt = "",
     `;
     section.appendChild(container);
     if(valBody) container.querySelector('.bodypart-input').value = valBody;
-    if(valAct) container.querySelector('.act-input').value = valAct;
-    if(valTime) container.querySelector('.time-input').value = valTime;
+    if(valReps) container.querySelector('.reps-input').value = valReps;
     if(valInt) container.querySelector('.int-input').value = valInt;
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
@@ -865,8 +864,7 @@ function saveWorkoutLog(e) {
     strengthRows.forEach(row => {
         strengthData.push({
             bodyPart: row.querySelector('.bodypart-input').value,
-            exercise: row.querySelector('.act-input').value,
-            time: row.querySelector('.time-input').value,
+            reps: row.querySelector('.reps-input').value,
             intensity: row.querySelector('.int-input').value,
             notes: row.querySelector('.notes-input').value
         });
@@ -928,7 +926,7 @@ function triggerEditLog(index) {
     (log.warmup || []).forEach(w => addWarmupRow(w.bodyPart, w.activity, w.time, w.intensity, w.notes));
 
     document.getElementById('strengthSection').innerHTML = "";
-    (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.exercise, s.time || "", s.intensity || "", s.notes));
+    (log.strength || []).forEach(s => addStrengthRow(s.bodyPart, s.reps || "10 Reps", s.intensity || "Medium", s.notes));
 
     document.getElementById('cardioSection').innerHTML = "";
     (log.cardio || []).forEach(c => addCardioRow(c.bodyPart, c.activity, c.time, c.intensity, c.notes));
@@ -962,7 +960,7 @@ function searchLogs() {
         let strengthHtml = "";
         (l.strength || []).forEach(s => { 
             let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
-            strengthHtml += `<div class="mb-1">• ${bodyBadge}<strong>${s.exercise}</strong> | Time: ${s.time || '-'} | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            strengthHtml += `<div class="mb-1">• ${bodyBadge}Reps: <strong>${s.reps || '-'}</strong> | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         let cardioHtml = "";
@@ -1015,7 +1013,7 @@ function renderTraineeLogs(traineeName) {
         let strengthHtml = "";
         (l.strength || []).forEach(s => { 
             let bodyBadge = s.bodyPart ? `<span class="badge bg-light text-dark border me-1">[${s.bodyPart}]</span>` : '';
-            strengthHtml += `<div>• ${bodyBadge}<strong>${s.exercise}</strong> | Time: ${s.time || '-'} | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            strengthHtml += `<div>• ${bodyBadge}Reps: <strong>${s.reps || '-'}</strong> | Int: ${s.intensity || '-'} ${s.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         let cardioHtml = "";
