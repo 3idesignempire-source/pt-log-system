@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -138,7 +138,7 @@
             <form onsubmit="handleLogin(event)">
                 <div class="mb-3 text-start">
                     <label class="form-label small fw-semibold text-secondary">USERNAME</label>
-                    <input type="text" id="username" class="form-control" value="preseth" required>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username" required>
                 </div>
                 <div class="mb-4 text-start">
                     <label class="form-label small fw-semibold text-secondary">PASSWORD</label>
@@ -516,6 +516,7 @@ function handleLogin(event) {
 }
 
 function logout() {
+    document.getElementById('username').value = '';
     document.getElementById('password').value = '';
     currentLoggedInClientUsername = "";
     showScreen('loginScreen');
@@ -968,3 +969,9 @@ document.getElementById('logDate').valueAsDate = new Date();
 
 </body>
 </html>
+"""
+
+with open("PT_Log_System_v6.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("File generated successfully: PT_Log_System_v6.html")
