@@ -219,7 +219,7 @@
                 <div class="mb-2"><input type="text" id="tName" class="form-control form-control-sm" placeholder="Full Name" required></div>
                 <div class="mb-2"><input type="text" id="tUser" class="form-control form-control-sm" placeholder="Username (For Client Login)" required></div>
                 <div class="mb-2"><input type="password" id="tPass" class="form-control form-control-sm" placeholder="Password" required></div>
-                <div class="mb-3"><input type="tel" id="tPhone" class="form-control form-control-sm" placeholder="Phone Number"></div>
+                <div class="mb-3"><input type="tel" id="tPhone" class="form-control form-control-sm" placeholder="Phone Number (e.g. 60123456789)"></div>
                 <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">SAVE TRAINEE</button>
             </form>
         </div>
@@ -343,7 +343,14 @@
                 </div>
                 <div id="cardioSection" class="mb-3"></div>
 
-                <button type="submit" class="btn btn-success w-100 fw-bold mt-4 py-2" id="logSubmitBtn">SUBMIT WORKOUT LOG</button>
+                <div class="mb-3 form-check bg-dark p-3 rounded border border-secondary">
+                    <input type="checkbox" class="form-check-input" id="sendWhatsAppCheck" style="cursor: pointer; width: 1.2em; height: 1.2em;">
+                    <label class="form-check-label text-light fw-semibold ms-2" for="sendWhatsAppCheck" style="cursor: pointer;">
+                        📱 Send WhatsApp Notification to Trainee
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 fw-bold mt-3 py-2" id="logSubmitBtn">SUBMIT WORKOUT LOG</button>
             </form>
         </div>
     </div>
@@ -565,7 +572,7 @@ function saveTrainee(e) {
         name: document.getElementById('tName').value,
         username: document.getElementById('tUser').value.trim(),
         password: document.getElementById('tPass').value,
-        phone: document.getElementById('tPhone').value
+        phone: document.getElementById('tPhone').value.trim()
     };
     appData.trainees.push(newTrainee);
     syncToFirebase();
@@ -577,7 +584,7 @@ function saveTrainee(e) {
 function renderTrainees() {
     let html = "";
     appData.trainees.forEach((t, index) => {
-        html += `<tr><td>${t.name}</td><td>${t.username}</td><td><code>${t.password}</code></td><td class="text-end"><button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size:12px;" onclick="deleteTrainee(${index})">Del</button></td></tr>`;
+        html += `<tr><td>${t.name}<br><small class="text-muted">📱 ${t.phone || 'No Phone'}</small></td><td>${t.username}</td><td><code>${t.password}</code></td><td class="text-end"><button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size:12px;" onclick="deleteTrainee(${index})">Del</button></td></tr>`;
     });
     document.getElementById('traineeTableBody').innerHTML = html || "<tr><td colspan='4' class='text-center text-muted'>No trainees found.</td></tr>";
 }
@@ -687,6 +694,7 @@ function openAddLogBlank() {
     document.getElementById('warmupSection').innerHTML = "";
     document.getElementById('strengthSection').innerHTML = "";
     document.getElementById('cardioSection').innerHTML = "";
+    document.getElementById('sendWhatsAppCheck').checked = false;
     if(document.getElementById('logTraineeSelect')) document.getElementById('logTraineeSelect').value = "";
     populateProgramDropdown();
     document.getElementById('logDate').valueAsDate = new Date();
@@ -784,6 +792,10 @@ function addCardioRow(valTime = "15 Mins", valInt = "Medium", valNotes = "") {
 function saveWorkoutLog(e) {
     e.preventDefault();
     let editIndex = parseInt(document.getElementById('editLogIndex').value);
+    let selectedTraineeName = document.getElementById('logTraineeSelect').value;
+    let selectedDate = document.getElementById('logDate').value;
+    let selectedProgram = document.getElementById('logProgram').value;
+    let sendWhatsApp = document.getElementById('sendWhatsAppCheck').checked;
     
     let warmupRows = document.querySelectorAll('#warmupSection .log-row-container');
     let warmupData = [];
@@ -817,9 +829,9 @@ function saveWorkoutLog(e) {
     });
 
     let logObj = {
-        trainee: document.getElementById('logTraineeSelect').value,
-        date: document.getElementById('logDate').value,
-        program: document.getElementById('logProgram').value,
+        trainee: selectedTraineeName,
+        date: selectedDate,
+        program: selectedProgram,
         warmup: warmupData,
         strength: strengthData,
         cardio: cardioData
@@ -834,6 +846,20 @@ function saveWorkoutLog(e) {
     }
     
     syncToFirebase();
+
+    // Check if WhatsApp notification is enabled
+    if (sendWhatsApp) {
+        let traineeObj = appData.trainees.find(t => t.name === selectedTraineeName);
+        if (traineeObj && traineeObj.phone) {
+            let phoneNum = traineeObj.phone.replace(/[^0-9]/g, ''); // Keep only numbers
+            let msg = `Hello ${traineeObj.name}! Your PT Workout Log for date ${selectedDate} (Program: ${selectedProgram}) has been updated by your Trainer. Please check your PT Log portal.`;
+            let waUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        } else {
+            alert("Workout saved successfully, but phone number not found for this trainee to send WhatsApp notification!");
+        }
+    }
+
     e.target.reset();
     openAddLogBlank();
     showScreen('trainerDashboard');
@@ -947,7 +973,8 @@ function renderTraineeLogs(traineeName) {
 
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
-            cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''
+            cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
         html += `
