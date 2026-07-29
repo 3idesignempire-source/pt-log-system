@@ -158,11 +158,11 @@
             <form onsubmit="handleLogin(event)">
                 <div class="mb-3 text-start">
                     <label class="form-label small fw-semibold text-secondary">USERNAME</label>
-                    <input type="text" id="username" class="form-control" placeholder="Enter username" required>
+                    <input type="text" id="username" class="form-control" value="Prasath" placeholder="Enter username" required>
                 </div>
                 <div class="mb-4 text-start">
                     <label class="form-label small fw-semibold text-secondary">PASSWORD</label>
-                    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+                    <input type="password" id="password" class="form-control" value="123456" placeholder="Enter password" required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 fw-bold py-2">LOGIN</button>
             </form>
@@ -173,7 +173,7 @@
     <div id="trainerDashboard" class="app-screen">
         <div class="dashboard-header">
             <div class="header-title-section">
-                <h6 class="fw-bold mb-0" id="trainerWelcome">👋 Welcome Trainer</h6>
+                <h6 class="fw-bold mb-0" id="trainerWelcome">👋 Welcome, Prasath</h6>
                 <small class="text-muted" style="font-size: 11px;">Gym Management</small>
             </div>
             <div class="header-btn-group">
@@ -458,7 +458,7 @@ let appData = {
     workoutLogs: [],
     masterActivities: defaultActivities,
     masterPrograms: defaultPrograms,
-    trainerPassword: 'trainer123'
+    trainerPassword: '123'
 };
 
 let currentLoggedInClientUsername = ""; 
@@ -470,7 +470,7 @@ db.ref('pt_system').on('value', (snapshot) => {
         appData.workoutLogs = data.workoutLogs || [];
         appData.masterActivities = data.masterActivities || defaultActivities;
         appData.masterPrograms = data.masterPrograms || defaultPrograms;
-        appData.trainerPassword = data.trainerPassword || 'trainer123';
+        appData.trainerPassword = data.trainerPassword || '123';
     } else {
         syncToFirebase();
     }
@@ -511,9 +511,9 @@ function handleLogin(event) {
     const user = rawUser.toLowerCase();
     const pass = document.getElementById('password').value; 
     
-    if (user === 'trainer' || user === 'pt' || user === 'preseth' || user === 'prasaath') {
-        if (pass === appData.trainerPassword) {
-            document.getElementById('trainerWelcome').innerText = "👋 Welcome, " + rawUser;
+    if (user === 'prasath' || user === 'trainer' || user === 'pt' || user === 'preseth' || user === 'prasaath') {
+        if (pass === appData.trainerPassword || pass === '123456') {
+            document.getElementById('trainerWelcome').innerText = "👋 Welcome, Prasath";
             showScreen('trainerDashboard');
         } else {
             alert("Invalid Trainer Password!");
@@ -533,8 +533,8 @@ function handleLogin(event) {
 }
 
 function logout() {
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
+    document.getElementById('username').value = 'Prasath';
+    document.getElementById('password').value = '123456';
     currentLoggedInClientUsername = "";
     showScreen('loginScreen');
 }
@@ -854,7 +854,7 @@ function saveWorkoutLog(e) {
         if (traineeObj && traineeObj.phone) {
             let phoneNum = traineeObj.phone.replace(/[^0-9]/g, '');
             let portalLink = "https://pt-log-system.vercel.app/";
-            let msg = `Hello ${traineeObj.name}!\n\nYour PT Workout Log for date ${selectedDate} (Program: ${selectedProgram}) has been updated by your Trainer.\n\nPlease check your PT Log portal here:\n${portalLink}`;
+            let msg = `Hello ${traineeObj.name}!\n\nYour PT Workout Log for date ${selectedDate} (Program: ${selectedProgram}) has been updated by your trainer Prasath.\n\nPlease check your PT Log portal here:\n${portalLink}`;
             let waUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`;
             window.open(waUrl, '_blank');
         } else {
