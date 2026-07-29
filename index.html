@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Log System</title>
+    <title>PT Log System - Firebase Cloud</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f4f6f9; font-family: -apple-system, sans-serif; }
@@ -24,7 +24,6 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
-        /* Fixed Header Layout */
         .dashboard-header {
             display: flex;
             justify-content: space-between;
@@ -39,7 +38,6 @@
         .header-btn-group { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
         .btn-header-action { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 8px; white-space: nowrap; }
 
-        /* Mouse Click Fix Button Layout */
         .btn-stacked-action {
             width: 100%;
             display: flex;
@@ -58,7 +56,6 @@
         }
         .btn-stacked-action:hover { opacity: 0.95; }
 
-        /* 3D Glass Box Icons */
         .icon-3d-box {
             background: rgba(255, 255, 255, 0.22);
             backdrop-filter: blur(10px);
@@ -85,13 +82,11 @@
 
         .btn-label-centered { letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.15); pointer-events: none; }
         
-        /* Logsheet Sections Styling */
         .section-header-orange { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
         .section-header-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
         .section-header-green { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
         
         .log-row-container { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
-        .log-row { margin-bottom: 6px; }
         .btn-del-custom { background-color: #ef4444; color: white; border: none; font-weight: 500; }
         
         .accordion-button-custom {
@@ -146,7 +141,7 @@
     <div id="loginScreen" class="app-screen active-screen">
         <div class="card card-custom p-4 bg-white text-center">
             <div class="commit-stamp">
-                ⏱️ LAST UPDATED: 24-JUL-2026 04:15 PM
+                ☁️ FIREBASE CLOUD SYNC ACTIVE
             </div>
 
             <h3 class="fw-bold mb-2 text-dark">🏋️‍♂️ PT LOG SYSTEM</h3>
@@ -170,7 +165,7 @@
     <!-- ================= 2. TRAINER DASHBOARD ================= -->
     <div id="trainerDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 04:15 PM
+            ☁️ FIREBASE CLOUD SYNC ACTIVE
         </div>
 
         <div class="dashboard-header">
@@ -379,7 +374,7 @@
     <!-- ================= 7. TRAINEE DASHBOARD ================= -->
     <div id="traineeDashboard" class="app-screen">
         <div class="commit-stamp mb-3">
-            ⏱️ LAST UPDATED: 24-JUL-2026 04:15 PM
+            ☁️ FIREBASE CLOUD SYNC ACTIVE
         </div>
 
         <div class="dashboard-header">
@@ -419,7 +414,37 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- Firebase App & Realtime Database SDK (CDN) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
+// ================= FIREBASE CONFIGURATION =================
+// (தம்பிக்கு கொடுப்பதற்கு முன் இங்க Firebase Console-ல் வாங்கிய உங்கள் Project Config-ஐ போடவும். 
+// இப்போதைக்கு டெஸ்டுக்காக LocalStorage Fallback உடன் இணைக்கப்பட்டுள்ளது)
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+let db = null;
+let useFirebase = false;
+
+try {
+    if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        useFirebase = true;
+    }
+} catch (e) {
+    console.log("Firebase init failed, fallback to localStorage", e);
+}
+
 const defaultActivities = [
     { category: 'warmup', name: 'Stretching' },
     { category: 'warmup', name: 'Jumping Jacks' },
@@ -441,16 +466,52 @@ const defaultPrograms = [
     "Core & Cardio Focus"
 ];
 
-if(!localStorage.getItem('trainees')) localStorage.setItem('trainees', JSON.stringify([]));
-if(!localStorage.getItem('workoutLogs')) localStorage.setItem('workoutLogs', JSON.stringify([]));
-if(!localStorage.getItem('masterActivities')) localStorage.setItem('masterActivities', JSON.stringify(defaultActivities));
-if(!localStorage.getItem('masterPrograms')) localStorage.setItem('masterPrograms', JSON.stringify(defaultPrograms));
-if(!localStorage.getItem('trainerPassword')) localStorage.setItem('trainerPassword', 'trainer123');
+// Memory DB Cache for Firebase
+let cloudData = {
+    trainees: JSON.parse(localStorage.getItem('trainees')) || [],
+    workoutLogs: JSON.parse(localStorage.getItem('workoutLogs')) || [],
+    masterActivities: JSON.parse(localStorage.getItem('masterActivities')) || defaultActivities,
+    masterPrograms: JSON.parse(localStorage.getItem('masterPrograms')) || defaultPrograms,
+    trainerPassword: localStorage.getItem('trainerPassword') || 'trainer123'
+};
+
+// Sync with Firebase if available
+if (useFirebase) {
+    db.ref('/').on('value', (snapshot) => {
+        const val = snapshot.val();
+        if (val) {
+            cloudData.trainees = val.trainees || [];
+            cloudData.workoutLogs = val.workoutLogs || [];
+            cloudData.masterActivities = val.masterActivities || defaultActivities;
+            cloudData.masterPrograms = val.masterPrograms || defaultPrograms;
+            cloudData.trainerPassword = val.trainerPassword || 'trainer123';
+        } else {
+            // Push default setup to Firebase if empty
+            updateCloudDB();
+        }
+    });
+}
+
+function getDB(key) {
+    return cloudData[key];
+}
+
+function saveDB(key, data) {
+    cloudData[key] = data;
+    if (useFirebase) {
+        db.ref('/' + key).set(data);
+    } else {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+}
+
+function updateCloudDB() {
+    if (useFirebase) {
+        db.ref('/').set(cloudData);
+    }
+}
 
 let currentLoggedInClientUsername = ""; 
-
-function getDB(key) { return JSON.parse(localStorage.getItem(key)); }
-function saveDB(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 
 function showScreen(screenId) {
     const screens = document.querySelectorAll('.app-screen');
@@ -484,7 +545,7 @@ function handleLogin(event) {
     const pass = document.getElementById('password').value; 
     
     if (user === 'trainer' || user === 'pt' || user === 'prasaath') {
-        let savedTrainerPass = localStorage.getItem('trainerPassword') || 'trainer123';
+        let savedTrainerPass = getDB('trainerPassword') || 'trainer123';
         if (pass === savedTrainerPass) {
             document.getElementById('trainerWelcome').innerText = "👋 Welcome, " + rawUser;
             showScreen('trainerDashboard');
@@ -528,7 +589,7 @@ function processPasswordChange() {
     if(!newPass) { alert("Please enter a valid password!"); return; }
 
     if(type === 'trainer') {
-        localStorage.setItem('trainerPassword', newPass);
+        saveDB('trainerPassword', newPass);
         alert("Trainer password updated successfully!");
     } else {
         let trainees = getDB('trainees');
@@ -687,7 +748,6 @@ function openAddLogBlank() {
     showScreen('addLogScreen');
 }
 
-/* 1. WARMUP ROW (TIME - text input + INTENSITY - text input + NOTES) */
 function addWarmupRow(valTime = "10 Mins", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('warmupSection');
     const container = document.createElement('div');
@@ -715,7 +775,6 @@ function addWarmupRow(valTime = "10 Mins", valInt = "Medium", valNotes = "") {
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-/* 2. STRENGTH ROW (BODY PARTS - dropdown + WEIGHT - text input + REPS - text input + NOTES) */
 function addStrengthRow(valBody = "Leg", valWeight = "10 kg", valReps = "10 Reps", valNotes = "") {
     const section = document.getElementById('strengthSection');
     const container = document.createElement('div');
@@ -750,7 +809,6 @@ function addStrengthRow(valBody = "Leg", valWeight = "10 kg", valReps = "10 Reps
     if(valNotes) container.querySelector('.notes-input').value = valNotes;
 }
 
-/* 3. CARDIO ROW (TIME - text input + INTENSITY - text input + NOTES) */
 function addCardioRow(valTime = "15 Mins", valInt = "Medium", valNotes = "") {
     const section = document.getElementById('cardioSection');
     const container = document.createElement('div');
@@ -956,7 +1014,7 @@ function renderTraineeLogs(traineeName) {
         html += `
         <div class="card card-custom p-3 bg-white mb-2">
             <div class="d-flex justify-content-between border-bottom pb-2 mb-2"><span class="fw-bold text-success">Workout Log</span><span class="text-secondary small fw-medium">${l.date}</span></div>
-            <p class="mb-2 small"><strong>Program:</strong> ${l.program}</p>
+            <p class="mb-2 small"><strong>Program: ++l.program++</strong></p>
             
             <div class="bg-light p-2 rounded small mb-2">
                 <span class="fw-bold text-warning d-block mb-1" style="font-size:11px;">WARM UP</span>
