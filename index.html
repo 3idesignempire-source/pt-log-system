@@ -343,14 +343,14 @@
                 </div>
                 <div id="cardioSection" class="mb-3"></div>
 
-                <div class="mb-3 form-check bg-dark p-3 rounded border border-secondary">
-                    <input type="checkbox" class="form-check-input" id="sendWhatsAppCheck" style="cursor: pointer; width: 1.2em; height: 1.2em;">
-                    <label class="form-check-label text-light fw-semibold ms-2" for="sendWhatsAppCheck" style="cursor: pointer;">
-                        📱 Send WhatsApp Notification to Trainee
+                <div class="mb-3 form-check px-3 py-2 rounded" style="background-color: #111827; border: 1px solid #334155;">
+                    <input type="checkbox" class="form-check-input mt-1" id="sendWhatsAppCheck" style="cursor: pointer;">
+                    <label class="form-check-label text-light small fw-semibold ms-2" for="sendWhatsAppCheck" style="cursor: pointer;">
+                        Send Notification
                     </label>
                 </div>
 
-                <button type="submit" class="btn btn-success w-100 fw-bold mt-3 py-2" id="logSubmitBtn">SUBMIT WORKOUT LOG</button>
+                <button type="submit" class="btn btn-success w-100 fw-bold mt-2 py-2" id="logSubmitBtn">SUBMIT WORKOUT LOG</button>
             </form>
         </div>
     </div>
@@ -847,11 +847,10 @@ function saveWorkoutLog(e) {
     
     syncToFirebase();
 
-    // Check if WhatsApp notification is enabled
     if (sendWhatsApp) {
         let traineeObj = appData.trainees.find(t => t.name === selectedTraineeName);
         if (traineeObj && traineeObj.phone) {
-            let phoneNum = traineeObj.phone.replace(/[^0-9]/g, ''); // Keep only numbers
+            let phoneNum = traineeObj.phone.replace(/[^0-9]/g, '');
             let msg = `Hello ${traineeObj.name}! Your PT Workout Log for date ${selectedDate} (Program: ${selectedProgram}) has been updated by your Trainer. Please check your PT Log portal.`;
             let waUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`;
             window.open(waUrl, '_blank');
@@ -973,7 +972,6 @@ function renderTraineeLogs(traineeName) {
 
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
-            c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''
             cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
