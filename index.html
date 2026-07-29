@@ -177,7 +177,7 @@
                 <small class="text-muted" style="font-size: 11px;">Gym Management</small>
             </div>
             <div class="header-btn-group">
-                <button class="btn btn-header-action btn-outline-info" onclick="openChangePasswordModal('trainer')">Pass 🔑</button>
+                <button class="btn btn-header-action btn-outline-info" onclick="openChangePasswordModal('trainer')">Password</button>
                 <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -374,7 +374,7 @@
                 <small class="text-muted" style="font-size: 11px;">Your Personal Workout Track</small>
             </div>
             <div class="header-btn-group">
-                <button class="btn btn-header-action btn-outline-info" id="clientPassBtn">Pass 🔑</button>
+                <button class="btn btn-header-action btn-outline-info" id="clientPassBtn">Password</button>
                 <button class="btn btn-header-action btn-outline-danger" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -947,7 +947,7 @@ function renderTraineeLogs(traineeName) {
 
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
-            cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
         html += `
