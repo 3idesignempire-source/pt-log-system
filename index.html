@@ -853,7 +853,8 @@ function saveWorkoutLog(e) {
         let traineeObj = appData.trainees.find(t => t.name === selectedTraineeName);
         if (traineeObj && traineeObj.phone) {
             let phoneNum = traineeObj.phone.replace(/[^0-9]/g, '');
-            let msg = `Hello ${traineeObj.name}! Your PT Workout Log for date ${selectedDate} (Program: ${selectedProgram}) has been updated by your Trainer. Please check your PT Log portal.`;
+            let portalLink = "https://pt-log-system.vercel.app/";
+            let msg = `Hello ${traineeObj.name}!\n\nYour PT Workout Log for date ${selectedDate} (Program: ${selectedProgram}) has been updated by your Trainer.\n\nPlease check your PT Log portal here:\n${portalLink}`;
             let waUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`;
             window.open(waUrl, '_blank');
         } else {
