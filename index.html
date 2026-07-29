@@ -123,6 +123,8 @@
         }
 
         .copyright-text { font-size: 11px; color: #94a3b8; margin-top: 30px; letter-spacing: 0.5px; }
+        .copyright-text a { color: #0284c7; text-decoration: none; font-weight: 600; }
+        .copyright-text a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -146,7 +148,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary w-100 fw-bold py-2">LOGIN</button>
             </form>
-            <div class="copyright-text">&copy; 2026 <span class="fw-bold text-secondary">3i design empire.com</span>.</div>
+            <div class="copyright-text">&copy; 2026 <a href="https://www.3iDesignEmpire.com" target="_blank">3iDesignEmpire.com</a>. All rights reserved.</div>
         </div>
     </div>
 
@@ -398,7 +400,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// Firebase Configuration (Updated with your project keys)
+// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyA4WxjhfyhL__hPGVVNd9d7862MBSyjjM8",
     authDomain: "pt-log-system.firebaseapp.com",
@@ -435,7 +437,6 @@ const defaultPrograms = [
     "Core & Cardio Focus"
 ];
 
-// Local state cache synced with Firebase
 let appData = {
     trainees: [],
     workoutLogs: [],
@@ -446,7 +447,6 @@ let appData = {
 
 let currentLoggedInClientUsername = ""; 
 
-// Realtime sync with Firebase Database
 db.ref('pt_system').on('value', (snapshot) => {
     let data = snapshot.val();
     if(data) {
@@ -456,7 +456,7 @@ db.ref('pt_system').on('value', (snapshot) => {
         appData.masterPrograms = data.masterPrograms || defaultPrograms;
         appData.trainerPassword = data.trainerPassword || 'trainer123';
     } else {
-        syncToFirebase(); // Initialize if empty
+        syncToFirebase();
     }
 });
 
@@ -940,7 +940,7 @@ function renderTraineeLogs(traineeName) {
 
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
-            cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
+            cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
         });
 
         html += `
