@@ -227,8 +227,8 @@
         <div class="card card-custom p-3">
             <h6 class="fw-bold mb-2 text-secondary">Active Trainees List</h6>
             <div class="table-responsive">
-                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 14px;">
-                    <thead><tr><th>Name</th><th>Username</th><th class="text-end">Actions</th></tr></thead>
+                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 13px;">
+                    <thead><tr><th>Name</th><th>Username</th><th>Password</th><th class="text-end">Actions</th></tr></thead>
                     <tbody id="traineeTableBody"></tbody>
                 </table>
             </div>
@@ -577,9 +577,9 @@ function saveTrainee(e) {
 function renderTrainees() {
     let html = "";
     appData.trainees.forEach((t, index) => {
-        html += `<tr><td>${t.name}</td><td>${t.username}</td><td class="text-end"><button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size:12px;" onclick="deleteTrainee(${index})">Del</button></td></tr>`;
+        html += `<tr><td>${t.name}</td><td>${t.username}</td><td><code>${t.password}</code></td><td class="text-end"><button class="btn btn-xs btn-del-custom py-0 px-2 rounded" style="font-size:12px;" onclick="deleteTrainee(${index})">Del</button></td></tr>`;
     });
-    document.getElementById('traineeTableBody').innerHTML = html || "<tr><td colspan='3' class='text-center text-muted'>No trainees found.</td></tr>";
+    document.getElementById('traineeTableBody').innerHTML = html || "<tr><td colspan='4' class='text-center text-muted'>No trainees found.</td></tr>";
 }
 
 function deleteTrainee(index) {
@@ -947,7 +947,7 @@ function renderTraineeLogs(traineeName) {
 
         let cardioHtml = "";
         (l.cardio || []).forEach(c => { 
-            cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${c.notes}</div>` : ''}</div>`; 
+            cardioHtml += `<div>• Time: <strong>${c.time || '-'}</strong> | Int: ${c.intensity || '-'} ${c.notes ? `<div class="pin-note-box">📌 ${s.notes}</div>` : ''}</div>`; 
         });
 
         html += `
